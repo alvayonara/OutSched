@@ -15,6 +15,7 @@ import com.alvayonara.outsched.utils.Preferences
 import com.alvayonara.outsched.utils.Preferences.Companion.ON_BOARDING
 import com.alvayonara.outsched.utils.ToolbarConfig
 import com.alvayonara.outsched.utils.gone
+import com.alvayonara.outsched.utils.visible
 import kotlinx.android.synthetic.main.activity_on_boarding.*
 
 class OnBoardingActivity : AppCompatActivity() {
@@ -126,10 +127,10 @@ class OnBoardingActivity : AppCompatActivity() {
             // set visibility based on position
             if (position == 2) {
                 // Set get started button to visible
-                btn_get_started.visibility = View.VISIBLE
+                btn_get_started.visible()
             } else {
                 // Hide/set to gone get started button
-                btn_get_started.visibility = View.GONE
+                btn_get_started.gone()
             }
         }
 

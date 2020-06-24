@@ -24,3 +24,13 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    materialVersion = '1.1.0'
+    recyclerViewVersion = '1.1.0'
+    glideVersion = '4.11.0'
+    archLifecycleVersion = '2.2.0'
+    retrofitVersion = '2.9.0'
+    retrofitGsonVersion = '2.9.0'
+    roomVersion = '2.2.5'
+}

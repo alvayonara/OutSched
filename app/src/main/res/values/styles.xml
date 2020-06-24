@@ -9,4 +9,9 @@
 
     <style name="AppTheme.noActionBar" parent="Theme.AppCompat.Light.NoActionBar"/>
 
+    <style name="Toolbar.Light" parent="@style/AppTheme">
+        <item name="colorControlNormal">#666666</item>
+        <item name="android:textColorPrimary">#666666</item>
+    </style>
+
 </resources>

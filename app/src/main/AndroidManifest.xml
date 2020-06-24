@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alvayonara.outsched">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.noActionBar">
+        <activity android:name=".ui.schedule.ChooseScheduleActivity" />
+        <activity
+            android:name=".ui.location.ExerciseLocationActivity"
+            android:label="@string/title_activity_schedule_location" />
         <activity android:name=".ui.onboarding.OnBoardingActivity" />
         <activity android:name=".ui.splashscreen.SplashScreenActivity">
             <intent-filter>
@@ -17,6 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/GCP_KEY" />
     </application>
 
 </manifest>
