@@ -6,6 +6,9 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
@@ -15,6 +18,7 @@ import com.alvayonara.outsched.ui.schedule.ChooseScheduleActivity
 import com.alvayonara.outsched.utils.PermissionUtils.PermissionDeniedDialog.Companion.newInstance
 import com.alvayonara.outsched.utils.PermissionUtils.isPermissionGranted
 import com.alvayonara.outsched.utils.PermissionUtils.requestPermission
+import com.alvayonara.outsched.utils.ToolbarConfig
 import com.alvayonara.outsched.utils.visible
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -32,23 +36,46 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private var permissionDenied = false
     private lateinit var mMap: GoogleMap
+    private lateinit var mapFragment: SupportMapFragment
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exercise_location)
 
-        val mapFragment = supportFragmentManager
+        initToolbar()
+
+        mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
+    private fun initToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Set Exercise Location"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        ToolbarConfig.setSystemBarColor(this, android.R.color.white)
+        ToolbarConfig.setSystemBarLight(this)
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap ?: return
+        mMap = googleMap
         enableMyLocation()
         initCameraIdle()
+    }
+
+    private fun initViewMyLocation(){
+        val locationButton =
+            (mapFragment.view?.findViewById<View>(Integer.parseInt("1"))?.parent as View).findViewById<View>(
+                Integer.parseInt("2")
+            )
+        val rlp = locationButton.layoutParams as RelativeLayout.LayoutParams
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+        rlp.setMargins(0, 0, 30, 600)
     }
 
     /**
@@ -61,6 +88,7 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
             == PackageManager.PERMISSION_GRANTED
         ) {
             mMap.isMyLocationEnabled = true
+            initViewMyLocation()
 
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
@@ -85,7 +113,7 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
             // Get center latitude and longitude
             val center = mMap.cameraPosition.target as LatLng
 
-            // Pass data center of latitude and longitude to get address with geocode class
+            // Pass data center of latitude and longitude to get address using geocode class
             getAddressFromLatLong(center.latitude, center.longitude)
         }
     }
@@ -138,6 +166,7 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
             // Enable the my location layer if the permission has been granted.
             enableMyLocation()
 
+            // Init idle map camera if the permission has been granted.
             initCameraIdle()
         } else {
             // Permission was denied. Display an error message
@@ -172,5 +201,15 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
          * @see .onRequestPermissionsResult
          */
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
