@@ -1,7 +1,7 @@
 package com.alvayonara.outsched.ui.location
 
 import android.Manifest
-import android.content.Intent
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -10,16 +10,21 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.content.ContextCompat
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.ui.schedule.ChooseScheduleActivity
+import com.alvayonara.outsched.ui.dashboard.DashboardFragment
+import com.alvayonara.outsched.ui.schedule.ChooseScheduleFragment
+import com.alvayonara.outsched.ui.schedule.ChooseScheduleFragment.Companion.EXTRA_ADDRESS
+import com.alvayonara.outsched.ui.schedule.ChooseScheduleFragment.Companion.EXTRA_LATITUDE
+import com.alvayonara.outsched.ui.schedule.ChooseScheduleFragment.Companion.EXTRA_LONGITUDE
 import com.alvayonara.outsched.utils.PermissionUtils.PermissionDeniedDialog.Companion.newInstance
 import com.alvayonara.outsched.utils.PermissionUtils.isPermissionGranted
 import com.alvayonara.outsched.utils.PermissionUtils.requestPermission
 import com.alvayonara.outsched.utils.ToolbarConfig
+import com.alvayonara.outsched.utils.invisible
 import com.alvayonara.outsched.utils.visible
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -29,11 +34,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_exercise_location.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 import java.io.IOException
 import java.util.*
 
@@ -129,20 +129,55 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
                             tv_address.text = address
                             address_card_view.visible()
                             btn_save_location.setOnClickListener {
-                                val intent =
-                                    Intent(this, ChooseScheduleActivity::class.java).apply {
-                                        putExtra("latitude", center.latitude)
-                                        putExtra("longitude", center.longitude)
-                                        putExtra("address", address)
+                                val builder = AlertDialog.Builder(this@ExerciseLocationActivity)
+
+                                builder.setTitle("Confirmation")
+                                builder.setMessage("Do you want to set this location?")
+                                builder.setPositiveButton("Yes") { _, _ ->
+                                    run {
+                                        val mChooseScheduleFragment = ChooseScheduleFragment()
+
+                                        val mBundle = Bundle()
+                                        mBundle.putString(EXTRA_ADDRESS, address)
+                                        mBundle.putString(
+                                            EXTRA_LATITUDE,
+                                            center.latitude.toString()
+                                        )
+                                        mBundle.putString(
+                                            EXTRA_LONGITUDE,
+                                            center.longitude.toString()
+                                        )
+
+                                        mChooseScheduleFragment.arguments = mBundle
+
+                                        val mFragmentManager = supportFragmentManager
+                                        val fragment =
+                                            mFragmentManager.findFragmentByTag(
+                                                ChooseScheduleFragment::class.java.simpleName
+                                            )
+
+                                        if (fragment !is DashboardFragment) {
+                                            mFragmentManager
+                                                .beginTransaction()
+                                                .addToBackStack(null)
+                                                .add(
+                                                    R.id.frame_container_location,
+                                                    mChooseScheduleFragment,
+                                                    ChooseScheduleFragment::class.java.simpleName
+                                                )
+                                                .commit()
+                                        }
                                     }
-                                startActivity(intent)
+                                }
+
+                                builder.setNegativeButton("No") { dialog: DialogInterface, _ ->
+                                    dialog.cancel()
+                                }
+
+                                builder.show()
                             }
                         } else {
-                            Toast.makeText(
-                                this,
-                                "Please check your internet connection",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            address_card_view.invisible()
                         }
                     }
                 }
