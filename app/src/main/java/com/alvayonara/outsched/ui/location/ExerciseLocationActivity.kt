@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -28,6 +29,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_exercise_location.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 import java.io.IOException
 import java.util.*
 
@@ -67,7 +73,7 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
         initCameraIdle()
     }
 
-    private fun initViewMyLocation(){
+    private fun initViewMyLocation() {
         val locationButton =
             (mapFragment.view?.findViewById<View>(Integer.parseInt("1"))?.parent as View).findViewById<View>(
                 Integer.parseInt("2")
@@ -113,39 +119,55 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
             // Get center latitude and longitude
             val center = mMap.cameraPosition.target as LatLng
 
-            // Pass data center of latitude and longitude to get address using geocode class
-            getAddressFromLatLong(center.latitude, center.longitude)
+            AsyncTask.execute {
+                run {
+                    // Pass data center of latitude and longitude to get address using geocode class
+                    val address = getAddressFromLatLong(center)
+
+                    runOnUiThread {
+                        if (address != null) {
+                            tv_address.text = address
+                            address_card_view.visible()
+                            btn_save_location.setOnClickListener {
+                                val intent =
+                                    Intent(this, ChooseScheduleActivity::class.java).apply {
+                                        putExtra("latitude", center.latitude)
+                                        putExtra("longitude", center.longitude)
+                                        putExtra("address", address)
+                                    }
+                                startActivity(intent)
+                            }
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "Please check your internet connection",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private fun getAddressFromLatLong(latitude: Double, longitude: Double) {
+    private fun getAddressFromLatLong(center: LatLng): String? {
         val geocode = Geocoder(this, Locale.getDefault())
-        val address: String
+        val address: String?
 
-        try {
-            val addresses =
-                geocode.getFromLocation(latitude, longitude, 1)
-            if (addresses.size > 0) {
-                address = addresses[0].getAddressLine(0)
-
-                tv_address.text = address
-                address_card_view.visible()
-                btn_save_location.setOnClickListener {
-                    val intent = Intent(this, ChooseScheduleActivity::class.java).apply {
-                        putExtra("latitude", latitude)
-                        putExtra("longitude", longitude)
-                        putExtra("address", address)
-                    }
-                    startActivity(intent)
-                }
+        address = try {
+            val addressList =
+                geocode.getFromLocation(center.latitude, center.longitude, 1)
+            if (addressList != null && addressList.size > 0) {
+                addressList[0].getAddressLine(0)
             } else {
-                tv_address.text = getString(R.string.geocode_process)
+                null
             }
         } catch (e: IOException) {
             e.printStackTrace()
-
-            Toast.makeText(this, "Please check your internet connection", Toast.LENGTH_SHORT).show()
+            null
         }
+
+        return address
     }
 
     // [START maps_check_location_permission_result]
