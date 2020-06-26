@@ -12,11 +12,13 @@ android {
 
     defaultConfig {
         applicationId "com.alvayonara.outsched"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "BASE_DARK_SKY_API", '"https://api.darksky.net/forecast/"'
         resValue "string", "GCP_KEY", apiKeyProperties['GCP_KEY']
         buildConfigField "String", "DARK_SKY_KEY", apiKeyProperties['DARK_SKY_KEY']
     }

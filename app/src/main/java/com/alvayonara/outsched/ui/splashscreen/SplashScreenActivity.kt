@@ -15,8 +15,7 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        // Init toolbar color
-        initToolbar()
+        ToolbarConfig.setSystemBarColor(this, R.color.colorGreen)
 
         // Set interval display splash screen 2 sec
         val handler = Handler()
@@ -25,9 +24,5 @@ class SplashScreenActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }, 2000)
-    }
-
-    private fun initToolbar() {
-        ToolbarConfig.setStatusBarColor(this, R.color.colorGreen)
     }
 }

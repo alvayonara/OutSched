@@ -1,4 +1,13 @@
 package com.alvayonara.outsched.data.local.entity
 
-class ScheduleEntity {
-}
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class ScheduleEntity(
+    @SerializedName("time") val time: Long,
+    @SerializedName("summary") val summary: String,
+    @SerializedName("icon") val icon: String,
+    @SerializedName("temperature") val temperature: Double
+) : Parcelable

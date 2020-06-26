@@ -30,15 +30,11 @@ class OnBoardingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_on_boarding)
 
+        ToolbarConfig.setSystemBarColor(this, R.color.colorGreen)
+
         preferences = Preferences(this)
 
-        initToolbar()
         initView()
-    }
-
-    private fun initToolbar() {
-        ToolbarConfig.setTransparent(this)
-        ToolbarConfig.setStatusBarColor(this, R.color.colorGreen)
     }
 
     private fun initView() {
