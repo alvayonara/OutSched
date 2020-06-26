@@ -1,16 +1,19 @@
 package com.alvayonara.outsched.ui.schedule
 
-import android.graphics.Color
+import android.content.DialogInterface
 import android.os.Bundle
-import android.view.View
-import android.view.Window
-import android.view.WindowManager
+import android.util.Log
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alvayonara.outsched.R
+import com.alvayonara.outsched.data.local.entity.ScheduleEntity
+import com.alvayonara.outsched.utils.ConvertUtils
 import com.alvayonara.outsched.utils.gone
+import com.alvayonara.outsched.utils.invisible
 import com.alvayonara.outsched.utils.visible
 import kotlinx.android.synthetic.main.activity_select_schedule.*
 
@@ -18,6 +21,8 @@ import kotlinx.android.synthetic.main.activity_select_schedule.*
 class SelectScheduleActivity : AppCompatActivity() {
 
     private lateinit var scheduleViewModel: SelectScheduleViewModel
+
+    private lateinit var scheduleAdapter: ScheduleAdapter
 
     private lateinit var address: String
     private lateinit var latitude: String
@@ -48,6 +53,15 @@ class SelectScheduleActivity : AppCompatActivity() {
         }
 
         initView()
+        getSchedulesData()
+    }
+
+    private fun initView() {
+        scheduleAdapter = ScheduleAdapter()
+
+        lyt_error.setOnClickListener {
+            getSchedulesData()
+        }
     }
 
     private fun initToolbar() {
@@ -57,24 +71,22 @@ class SelectScheduleActivity : AppCompatActivity() {
         collapsing_toolbar.title = "Select Schedule"
     }
 
-    private fun initView() {
-        val scheduleAdapter = ScheduleAdapter()
+    private fun getSchedulesData() {
+        main_content.invisible()
+        lyt_error.invisible()
+        progress_bar.visible()
 
-//        lyt_schedule.gone()
-//        lyt_no_connection.gone()
-//
-//        progress_bar.visible()
         scheduleViewModel.setWeathersData(latitude, longitude)
         scheduleViewModel.getWeathersData().observe(this, Observer { schedules ->
-//            progress_bar.gone()
+            progress_bar.gone()
 
             if (schedules != null) {
-//                lyt_schedule.visible()
+                main_content.visible()
 
                 scheduleAdapter.setSchedules(schedules)
                 scheduleAdapter.notifyDataSetChanged()
             } else {
-//                lyt_no_connection.visible()
+                lyt_error.visible()
             }
         })
 
@@ -82,5 +94,41 @@ class SelectScheduleActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@SelectScheduleActivity)
             adapter = scheduleAdapter
         }
+    }
+
+    private fun backAlertDialog() {
+        val builder = AlertDialog.Builder(this@SelectScheduleActivity)
+
+        builder.setTitle("Confirmation")
+        builder.setMessage("Do you want to change location?")
+        builder.setPositiveButton("Yes") { _, _ ->
+            finish()
+        }
+
+        builder.setNegativeButton("No") { dialog: DialogInterface, _ ->
+            dialog.cancel()
+        }
+
+        builder.show()
+    }
+
+    override fun onBackPressed() {
+        backAlertDialog()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                backAlertDialog()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        getSchedulesData()
     }
 }

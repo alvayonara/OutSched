@@ -1,6 +1,7 @@
 package com.alvayonara.outsched.data.local.entity
 
 import android.os.Parcelable
+import com.alvayonara.outsched.utils.ConvertUtils
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
