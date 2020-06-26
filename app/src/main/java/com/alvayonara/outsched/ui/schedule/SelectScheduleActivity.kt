@@ -60,7 +60,7 @@ class SelectScheduleActivity : AppCompatActivity() {
     private fun initView() {
         val scheduleAdapter = ScheduleAdapter()
 
-        lyt_schedule.gone()
+//        lyt_schedule.gone()
 //        lyt_no_connection.gone()
 //
 //        progress_bar.visible()
@@ -69,7 +69,7 @@ class SelectScheduleActivity : AppCompatActivity() {
 //            progress_bar.gone()
 
             if (schedules != null) {
-                lyt_schedule.visible()
+//                lyt_schedule.visible()
 
                 scheduleAdapter.setSchedules(schedules)
                 scheduleAdapter.notifyDataSetChanged()
