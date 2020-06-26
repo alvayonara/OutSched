@@ -2,19 +2,18 @@ package com.alvayonara.outsched.ui.schedule
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.data.local.entity.ScheduleEntity
-import com.alvayonara.outsched.utils.ConvertUtils
 import com.alvayonara.outsched.utils.gone
 import com.alvayonara.outsched.utils.invisible
 import com.alvayonara.outsched.utils.visible
+import com.google.android.material.appbar.AppBarLayout.ScrollingViewBehavior
 import kotlinx.android.synthetic.main.activity_select_schedule.*
 
 
@@ -59,9 +58,9 @@ class SelectScheduleActivity : AppCompatActivity() {
     private fun initView() {
         scheduleAdapter = ScheduleAdapter()
 
-        lyt_error.setOnClickListener {
-            getSchedulesData()
-        }
+//        lyt_error.setOnClickListener {
+//            getSchedulesData()
+//        }
     }
 
     private fun initToolbar() {
@@ -72,8 +71,6 @@ class SelectScheduleActivity : AppCompatActivity() {
     }
 
     private fun getSchedulesData() {
-        main_content.invisible()
-        lyt_error.invisible()
         progress_bar.visible()
 
         scheduleViewModel.setWeathersData(latitude, longitude)
@@ -81,12 +78,10 @@ class SelectScheduleActivity : AppCompatActivity() {
             progress_bar.gone()
 
             if (schedules != null) {
-                main_content.visible()
-
                 scheduleAdapter.setSchedules(schedules)
                 scheduleAdapter.notifyDataSetChanged()
-            } else {
-                lyt_error.visible()
+
+                rv_schedule.visible()
             }
         })
 

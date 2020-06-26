@@ -49,6 +49,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested_scroll_schedule"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -65,67 +66,67 @@
                     android:layout_height="wrap_content"
                     tools:listitem="@layout/item_row_choose_schedule" />
 
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/lyt_error"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                    android:clickable="true"-->
+<!--                    android:focusable="true"-->
+<!--                    android:gravity="center"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:visibility="gone">-->
+
+<!--                    <ImageView-->
+<!--                        android:layout_width="100dp"-->
+<!--                        android:layout_height="100dp"-->
+<!--                        android:tint="#263238"-->
+<!--                        app:srcCompat="@drawable/ic_signal_wifi_off" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="5dp"-->
+<!--                        android:text="@string/no_internet_connection"-->
+<!--                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"-->
+<!--                        android:textColor="#263238"-->
+<!--                        android:textStyle="bold" />-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="5dp"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <ImageView-->
+<!--                            android:layout_width="15dp"-->
+<!--                            android:layout_height="15dp"-->
+<!--                            android:layout_marginEnd="5dp"-->
+<!--                            android:tint="#263238"-->
+<!--                            app:srcCompat="@drawable/ic_refresh" />-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="@string/tap_for_refresh"-->
+<!--                            android:textAlignment="center"-->
+<!--                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"-->
+<!--                            android:textColor="#263238" />-->
+
+<!--                    </LinearLayout>-->
+<!--                </LinearLayout>-->
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
-        <LinearLayout
-            android:id="@+id/lyt_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:tint="#263238"
-                app:srcCompat="@drawable/ic_signal_wifi_off" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/no_internet_connection"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textColor="#263238"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginEnd="5dp"
-                    android:tint="#263238"
-                    app:srcCompat="@drawable/ic_refresh" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tap_for_refresh"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                    android:textColor="#263238" />
-
-            </LinearLayout>
-        </LinearLayout>
 </RelativeLayout>
