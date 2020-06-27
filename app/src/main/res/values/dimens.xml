@@ -2,4 +2,5 @@
 <resources>
     <dimen name="spacing_large">15dp</dimen>
     <dimen name="detail_backdrop_height">256dp</dimen>
+    <dimen name="spacing_smlarge">18dp</dimen>
 </resources>

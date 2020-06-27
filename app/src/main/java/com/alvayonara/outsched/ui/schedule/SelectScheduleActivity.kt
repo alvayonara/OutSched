@@ -21,8 +21,6 @@ class SelectScheduleActivity : AppCompatActivity() {
 
     private lateinit var scheduleViewModel: SelectScheduleViewModel
 
-    private lateinit var scheduleAdapter: ScheduleAdapter
-
     private lateinit var address: String
     private lateinit var latitude: String
     private lateinit var longitude: String
@@ -51,16 +49,7 @@ class SelectScheduleActivity : AppCompatActivity() {
             longitude = extras.getString(EXTRA_LONGITUDE)!!
         }
 
-        initView()
         getSchedulesData()
-    }
-
-    private fun initView() {
-        scheduleAdapter = ScheduleAdapter()
-
-//        lyt_error.setOnClickListener {
-//            getSchedulesData()
-//        }
     }
 
     private fun initToolbar() {
@@ -71,6 +60,8 @@ class SelectScheduleActivity : AppCompatActivity() {
     }
 
     private fun getSchedulesData() {
+        val scheduleAdapter = ScheduleAdapter()
+
         progress_bar.visible()
 
         scheduleViewModel.setWeathersData(latitude, longitude)
@@ -80,8 +71,6 @@ class SelectScheduleActivity : AppCompatActivity() {
             if (schedules != null) {
                 scheduleAdapter.setSchedules(schedules)
                 scheduleAdapter.notifyDataSetChanged()
-
-                rv_schedule.visible()
             }
         })
 
@@ -107,9 +96,7 @@ class SelectScheduleActivity : AppCompatActivity() {
         builder.show()
     }
 
-    override fun onBackPressed() {
-        backAlertDialog()
-    }
+    override fun onBackPressed() = backAlertDialog()
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

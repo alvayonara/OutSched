@@ -1,8 +1,6 @@
 package com.alvayonara.outsched.utils
 
-import java.lang.Exception
 import java.text.DecimalFormat
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
@@ -19,6 +17,26 @@ object ConvertUtils {
             // reformat date time style (ex: December 31, 1997)
             val formatterReformat =
                 SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault())
+
+            // convert result
+            convertResult = formatterReformat.format(timeUnixToDate)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return convertResult
+    }
+
+    fun convertTimeToDateFormat(time: Long?): String? {
+        // assign empty value for convertResult
+        var convertResult = ""
+
+        try {
+            val timeUnixToDate = Date(time!! * 1000)
+
+            // reformat date time style (ex: December 31, 1997)
+            val formatterReformat =
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
             // convert result
             convertResult = formatterReformat.format(timeUnixToDate)

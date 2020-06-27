@@ -45,6 +45,15 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    companion object {
+        /**
+         * Request code for location permission request.
+         *
+         * @see .onRequestPermissionsResult
+         */
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exercise_location)
@@ -231,15 +240,6 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
      */
     private fun showMissingPermissionError() {
         newInstance(true).show(supportFragmentManager, "dialog")
-    }
-
-    companion object {
-        /**
-         * Request code for location permission request.
-         *
-         * @see .onRequestPermissionsResult
-         */
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -7,7 +7,6 @@ class Preferences(context: Context) {
 
     companion object {
         const val OUT_SCHEDULE_PREF = "USER_PREF"
-
         const val ON_BOARDING = "on_boarding"
     }
 

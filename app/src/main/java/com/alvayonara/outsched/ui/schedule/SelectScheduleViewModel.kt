@@ -8,33 +8,36 @@ import com.alvayonara.outsched.BuildConfig
 import com.alvayonara.outsched.api.ApiRepository
 import com.alvayonara.outsched.data.local.entity.ScheduleEntity
 import com.alvayonara.outsched.data.remote.entity.RequestResponse
+import com.alvayonara.outsched.ui.schedule.item.DateItem
+import com.alvayonara.outsched.ui.schedule.item.ScheduleItem
 import com.alvayonara.outsched.utils.ConvertUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class SelectScheduleViewModel : ViewModel() {
 
-    val weathersDataResults = MutableLiveData<List<ScheduleEntity>>()
+    val weathersDataResults = MutableLiveData<List<ScheduleListItem>>()
 
     fun setWeathersData(latitude: String, longitude: String) {
         ApiRepository().darkSky.getWeathersData(BuildConfig.DARK_SKY_KEY, latitude, longitude)
             .enqueue(object : Callback<RequestResponse> {
                 override fun onFailure(call: Call<RequestResponse>, t: Throwable) {
-                    Log.e("Movie Request Error: ", t.toString())
+                    Log.e("Weather Request Error: ", t.toString())
+
                     weathersDataResults.postValue(null)
                 }
 
                 override fun onResponse(
                     call: Call<RequestResponse>,
                     response: Response<RequestResponse>
-                ) {
+                ) =
                     weathersDataResults.postValue(initSchedule(response.body()!!.hourly.data))
-                }
             })
     }
 
-    private fun initSchedule(schedules: List<ScheduleEntity>): ArrayList<ScheduleEntity> {
+    private fun initSchedule(schedules: List<ScheduleEntity>): ArrayList<ScheduleListItem> {
         val listSchedules = ArrayList<ScheduleEntity>()
 
         // array weather data
@@ -59,10 +62,44 @@ class SelectScheduleViewModel : ViewModel() {
             }
         }
 
-        return listSchedules
+        val consolidatedList = ArrayList<ScheduleListItem>()
+
+        val groupedHashMap: HashMap<String, MutableList<ScheduleEntity>>? =
+            groupDataIntoHashMap(listSchedules)
+
+        for (date in groupedHashMap!!.keys) {
+            val dateItem = DateItem()
+            dateItem.dateList = date
+            consolidatedList.add(dateItem)
+
+            for (pojoOfJsonArray in groupedHashMap[date]!!) {
+                val scheduleItem = ScheduleItem()
+                scheduleItem.scheduleEntity = pojoOfJsonArray
+                consolidatedList.add(scheduleItem)
+            }
+        }
+
+        return consolidatedList
     }
 
-    fun getWeathersData(): LiveData<List<ScheduleEntity>> {
-        return weathersDataResults
+    private fun groupDataIntoHashMap(listOfPojosOfJsonArray: List<ScheduleEntity>): HashMap<String, MutableList<ScheduleEntity>>? {
+        val groupedHashMap: HashMap<String, MutableList<ScheduleEntity>> =
+            HashMap()
+        for (pojoOfJsonArray in listOfPojosOfJsonArray) {
+            val hashMapKey: String = ConvertUtils.convertTimeToDateFormat(pojoOfJsonArray.time)!!
+            if (groupedHashMap.containsKey(hashMapKey)) {
+                // The key is already in the HashMap; add the pojo object
+                // against the existing key.
+                groupedHashMap[hashMapKey]!!.add(pojoOfJsonArray)
+            } else {
+                // The key is not there in the HashMap; create a new key-value pair
+                val list: MutableList<ScheduleEntity> = ArrayList()
+                list.add(pojoOfJsonArray)
+                groupedHashMap[hashMapKey] = list
+            }
+        }
+        return groupedHashMap
     }
+
+    fun getWeathersData(): LiveData<List<ScheduleListItem>> = weathersDataResults
 }
