@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/spacing_large"
+    android:paddingBottom="12dp"
     android:paddingLeft="@dimen/spacing_smlarge"
     android:paddingRight="@dimen/spacing_smlarge"
-    android:paddingTop="@dimen/spacing_large">
+    android:paddingTop="12dp">
 
     <TextView
         android:id="@+id/tv_section_date"

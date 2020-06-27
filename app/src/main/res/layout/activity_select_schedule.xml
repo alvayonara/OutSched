@@ -64,6 +64,7 @@
                     android:id="@+id/rv_schedule"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     tools:listitem="@layout/item_row_select_schedule" />
 
             </LinearLayout>

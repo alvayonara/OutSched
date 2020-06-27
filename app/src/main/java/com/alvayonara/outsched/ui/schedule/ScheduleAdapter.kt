@@ -80,7 +80,6 @@ class ScheduleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 }
 
                 tv_weather.text = schedule.scheduleEntity!!.summary
-                tv_date.text = ConvertUtils.convertTimeToDate(schedule.scheduleEntity!!.time)
                 tv_hour.text = ConvertUtils.convertTimeToHour(schedule.scheduleEntity!!.time)
                 tv_temperature.text =
                     context.getString(
