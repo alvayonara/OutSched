@@ -21,10 +21,6 @@ class SelectScheduleActivity : AppCompatActivity() {
 
     private lateinit var scheduleViewModel: SelectScheduleViewModel
 
-    private lateinit var address: String
-    private lateinit var latitude: String
-    private lateinit var longitude: String
-
     companion object {
         const val EXTRA_ADDRESS = "extra_address"
         const val EXTRA_LATITUDE = "extra_latitude"
@@ -44,9 +40,15 @@ class SelectScheduleActivity : AppCompatActivity() {
 
         val extras = intent.extras
         if (extras != null) {
-            address = extras.getString(EXTRA_ADDRESS)!!
-            latitude = extras.getString(EXTRA_LATITUDE)!!
-            longitude = extras.getString(EXTRA_LONGITUDE)!!
+            val address = extras.getString(EXTRA_ADDRESS)
+            val latitude = extras.getString(EXTRA_LATITUDE)
+            val longitude = extras.getString(EXTRA_LONGITUDE)
+
+            if (address != null || latitude != null || longitude != null){
+                scheduleViewModel.setAddressSchedule(address!!)
+                scheduleViewModel.setLatitudeSchedule(latitude!!)
+                scheduleViewModel.setLongitudeSchedule(longitude!!)
+            }
         }
 
         getSchedulesData()
@@ -64,7 +66,7 @@ class SelectScheduleActivity : AppCompatActivity() {
 
         progress_bar.visible()
 
-        scheduleViewModel.setWeathersData(latitude, longitude)
+        scheduleViewModel.setWeathersData()
         scheduleViewModel.getWeathersData().observe(this, Observer { schedules ->
             progress_bar.gone()
 

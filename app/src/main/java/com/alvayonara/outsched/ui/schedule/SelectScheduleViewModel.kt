@@ -26,8 +26,28 @@ class SelectScheduleViewModel : ViewModel() {
 
     val weathersDataResults = MutableLiveData<List<ScheduleListItem>>()
 
-    fun setWeathersData(latitude: String, longitude: String) {
-        ApiRepository().darkSky.getWeathersData(BuildConfig.DARK_SKY_KEY, latitude, longitude)
+    private val address = MutableLiveData<String>()
+    private val latitude = MutableLiveData<String>()
+    private val longitude = MutableLiveData<String>()
+
+    fun setAddressSchedule(address: String) {
+        this.address.value = address
+    }
+
+    fun setLatitudeSchedule(latitude: String) {
+        this.latitude.value = latitude
+    }
+
+    fun setLongitudeSchedule(longitude: String) {
+        this.longitude.value = longitude
+    }
+
+    fun setWeathersData() {
+        ApiRepository().darkSky.getWeathersData(
+            BuildConfig.DARK_SKY_KEY,
+            latitude.value,
+            longitude.value
+        )
             .enqueue(object : Callback<RequestResponse> {
                 override fun onFailure(call: Call<RequestResponse>, t: Throwable) {
                     Log.e("Weather Request Error: ", t.toString())
@@ -46,6 +66,12 @@ class SelectScheduleViewModel : ViewModel() {
     private fun initSchedule(schedules: List<ScheduleEntity>): ArrayList<ScheduleListItem> {
         val listSchedules = ArrayList<ScheduleEntity>()
 
+        for (i in schedules.indices) {
+            schedules[i].address = address.value
+            schedules[i].latitude = latitude.value
+            schedules[i].longitude = longitude.value
+        }
+
         // array weather data
         val weatherList = arrayOf("Clear", "Cloudy")
 
@@ -54,11 +80,11 @@ class SelectScheduleViewModel : ViewModel() {
             arrayOf("07:00", "08:00", "09:00", "16:00", "17:00")
 
         for (schedule in schedules) {
-            if (schedule.time * 1000 < System.currentTimeMillis()) {
+            if (schedule.time!! * 1000 < System.currentTimeMillis()) {
                 continue
             }
             for (weather in weatherList) {
-                if (schedule.summary.contains(weather)) {
+                if (schedule.summary!!.contains(weather)) {
                     for (time in timeList) {
                         if (ConvertUtils.convertTimeToHour(schedule.time).equals(time)) {
                             listSchedules.add(schedule)

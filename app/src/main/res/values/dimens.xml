@@ -3,4 +3,8 @@
     <dimen name="spacing_large">15dp</dimen>
     <dimen name="detail_backdrop_height">256dp</dimen>
     <dimen name="spacing_smlarge">18dp</dimen>
+    <dimen name="spacing_xsmall">2dp</dimen>
+    <dimen name="spacing_xmedium">7dp</dimen>
+    <dimen name="spacing_medium">5dp</dimen>
+    <dimen name="my_corner_radius">7dp</dimen>
 </resources>

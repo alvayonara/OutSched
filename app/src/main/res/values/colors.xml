@@ -8,4 +8,9 @@
 
     <color name="colorDotsDark">#4D000000</color>
     <color name="colorDotsWhite">#e6e6e6</color>
+
+    <color name="colorBlue">#1976D2</color>
+    <color name="colorAccentPink">#FF4081</color>
+    <color name="grey_90">#263238</color>
+    <color name="grey_60">#666666</color>
 </resources>
