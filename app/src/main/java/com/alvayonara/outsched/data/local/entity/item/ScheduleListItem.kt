@@ -1,6 +1,6 @@
-package com.alvayonara.outsched.ui.schedule
+package com.alvayonara.outsched.data.local.entity.item
 
-import com.alvayonara.outsched.ui.schedule.item.ScheduleItem
+import com.alvayonara.outsched.data.local.entity.item.ScheduleItem
 
 abstract class ScheduleListItem {
 

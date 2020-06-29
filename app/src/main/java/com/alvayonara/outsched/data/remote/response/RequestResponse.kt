@@ -1,4 +1,4 @@
-package com.alvayonara.outsched.data.remote.entity
+package com.alvayonara.outsched.data.remote.response
 
 import com.alvayonara.outsched.data.local.entity.ScheduleEntity
 import com.google.gson.annotations.SerializedName

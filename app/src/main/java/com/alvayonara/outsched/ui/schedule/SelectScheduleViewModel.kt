@@ -7,9 +7,10 @@ import androidx.lifecycle.ViewModel
 import com.alvayonara.outsched.BuildConfig
 import com.alvayonara.outsched.api.ApiRepository
 import com.alvayonara.outsched.data.local.entity.ScheduleEntity
-import com.alvayonara.outsched.data.remote.entity.RequestResponse
-import com.alvayonara.outsched.ui.schedule.item.DateItem
-import com.alvayonara.outsched.ui.schedule.item.ScheduleItem
+import com.alvayonara.outsched.data.remote.response.RequestResponse
+import com.alvayonara.outsched.data.local.entity.item.DateItem
+import com.alvayonara.outsched.data.local.entity.item.ScheduleItem
+import com.alvayonara.outsched.data.local.entity.item.ScheduleListItem
 import com.alvayonara.outsched.utils.ConvertUtils
 import retrofit2.Call
 import retrofit2.Callback
@@ -121,12 +122,14 @@ class SelectScheduleViewModel : ViewModel() {
 
         // Loop for each from sort key result
         for (date in sortedKeys) {
-            val dateItem = DateItem()
+            val dateItem =
+                DateItem()
             dateItem.dateList = date
             consolidatedList.add(dateItem)
 
             for (pojoOfJsonArray in groupedHashMap[date]!!) {
-                val scheduleItem = ScheduleItem()
+                val scheduleItem =
+                    ScheduleItem()
                 scheduleItem.scheduleEntity = pojoOfJsonArray
                 consolidatedList.add(scheduleItem)
             }
