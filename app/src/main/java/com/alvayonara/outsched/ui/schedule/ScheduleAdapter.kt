@@ -1,33 +1,24 @@
 package com.alvayonara.outsched.ui.schedule
 
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem.Companion.TYPE_DATE
-import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem.Companion.TYPE_GENERAL
+import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
 import com.alvayonara.outsched.data.source.local.entity.item.DateItem
 import com.alvayonara.outsched.data.source.local.entity.item.ScheduleItem
 import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem
+import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem.Companion.TYPE_DATE
+import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem.Companion.TYPE_GENERAL
+import com.alvayonara.outsched.ui.schedule.ScheduleDetailDialogFragment.Companion.EXTRA_SCHEDULE_DETAIL
 import com.alvayonara.outsched.utils.ConvertUtils
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.dialog_select_schedule.*
 import kotlinx.android.synthetic.main.item_date_section.view.*
-import kotlinx.android.synthetic.main.item_row_select_schedule.view.iv_weather
-import kotlinx.android.synthetic.main.item_row_select_schedule.view.tv_hour
-import kotlinx.android.synthetic.main.item_row_select_schedule.view.tv_temperature
-import kotlinx.android.synthetic.main.item_row_select_schedule.view.tv_weather
+import kotlinx.android.synthetic.main.item_row_select_schedule.view.*
 
 
 class ScheduleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -81,89 +72,42 @@ class ScheduleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class ScheduleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindItem(schedule: ScheduleItem) {
             with(itemView) {
-                setImageWeather(schedule, iv_weather)
-                setScheduleView(schedule, tv_weather, tv_hour, tv_temperature)
-
-                itemView.setOnClickListener {
-                    val dialog = Dialog(context)
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // before
-                    dialog.setContentView(R.layout.dialog_select_schedule)
-                    dialog.window
-                        ?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    dialog.setCancelable(true)
-
-                    val mMapView =
-                        dialog.map_detail as MapView
-                    MapsInitializer.initialize(context)
-
-                    mMapView.onCreate(dialog.onSaveInstanceState())
-                    mMapView.onResume()
-
-                    mMapView.getMapAsync { googleMap ->
-                        googleMap.uiSettings.setAllGesturesEnabled(false)
-                        val savedLatLng = LatLng(
-                            schedule.scheduleEntity!!.latitude!!.toDouble(),
-                            schedule.scheduleEntity!!.longitude!!.toDouble()
-                        )
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(savedLatLng, 18f))
-                        googleMap.addMarker(MarkerOptions().position(savedLatLng))
+                when {
+                    schedule.scheduleEntity!!.icon!!.startsWith("clear") -> {
+                        iv_weather.setImageResource(R.drawable.ic_clear)
                     }
-
-                    setImageWeather(schedule, dialog.iv_weather)
-                    setScheduleView(
-                        schedule,
-                        dialog.tv_weather,
-                        dialog.tv_hour,
-                        dialog.tv_temperature
-                    )
-                    dialog.tv_date.text =
-                        ConvertUtils.convertTimeToDate(schedule.scheduleEntity!!.time)
-
-                    dialog.btn_save.setOnClickListener {
-                        dialog.dismiss()
+                    schedule.scheduleEntity!!.icon!!.startsWith("cloudy") -> {
+                        iv_weather.setImageResource(R.drawable.ic_clouds)
                     }
-
-                    dialog.btn_cancel.setOnClickListener {
-                        dialog.dismiss()
+                    schedule.scheduleEntity!!.icon!!.startsWith("partly-cloudy") -> {
+                        iv_weather.setImageResource(R.drawable.ic_partly_cloudy)
                     }
+                    schedule.scheduleEntity!!.icon!!.contains("rain") -> {
+                        iv_weather.setImageResource(R.drawable.ic_rain)
+                    }
+                }
 
-                    dialog.show()
-                }
-            }
-        }
-
-        private fun setImageWeather(schedule: ScheduleItem, ivWeather: ImageView) {
-            when {
-                schedule.scheduleEntity!!.icon!!.startsWith("clear") -> {
-                    ivWeather.setImageResource(R.drawable.ic_clear)
-                }
-                schedule.scheduleEntity!!.icon!!.startsWith("cloudy") -> {
-                    ivWeather.setImageResource(R.drawable.ic_clouds)
-                }
-                schedule.scheduleEntity!!.icon!!.startsWith("partly-cloudy") -> {
-                    ivWeather.setImageResource(R.drawable.ic_partly_cloudy)
-                }
-                schedule.scheduleEntity!!.icon!!.contains("rain") -> {
-                    ivWeather.setImageResource(R.drawable.ic_rain)
-                }
-            }
-        }
-
-        private fun setScheduleView(
-            schedule: ScheduleItem,
-            tvWeather: TextView,
-            tvHour: TextView,
-            tvTemperature: TextView
-        ) {
-            with(itemView) {
-                tvWeather.text = schedule.scheduleEntity!!.summary
-                tvHour.text =
+                tv_weather.text = schedule.scheduleEntity!!.summary
+                tv_hour.text =
                     ConvertUtils.convertTimeToHour(schedule.scheduleEntity!!.time)
-                tvTemperature.text = context.getString(
+                tv_temperature.text = context.getString(
                     R.string.temperature,
                     ConvertUtils.convertTemperatureRound(schedule.scheduleEntity!!.temperature)
                         .toString()
                 )
+
+                itemView.setOnClickListener {
+                    val scheduleDetailDialogFragment = ScheduleDetailDialogFragment()
+
+                    val mBundle = Bundle()
+                    mBundle.putParcelable(EXTRA_SCHEDULE_DETAIL, schedule.scheduleEntity)
+
+                    scheduleDetailDialogFragment.arguments = mBundle
+                    scheduleDetailDialogFragment.show(
+                        (context as AppCompatActivity).supportFragmentManager,
+                        "schedule_detail"
+                    )
+                }
             }
         }
     }

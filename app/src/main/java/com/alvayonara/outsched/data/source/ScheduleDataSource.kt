@@ -11,4 +11,14 @@ interface ScheduleDataSource {
         longitude: String,
         address: String
     ): LiveData<List<ScheduleListItem>>
+
+    fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>>
+
+    fun getAllPastSchedules(): LiveData<List<ScheduleEntity>>
+
+    fun insertSchedule(scheduleEntity: ScheduleEntity)
+
+    fun updateSchedule(scheduleEntity: ScheduleEntity)
+
+    fun deleteSchedule(scheduleEntity: ScheduleEntity)
 }

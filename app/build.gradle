@@ -66,6 +66,8 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitGsonVersion"
 
-    //room
-    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.2.0'
+    implementation 'androidx.room:room-runtime:2.2.5'
+    kapt 'androidx.room:room-compiler:2.2.5'
+    androidTestImplementation 'androidx.room:room-testing:2.2.5'
 }

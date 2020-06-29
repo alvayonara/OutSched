@@ -14,18 +14,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
-            app:cardUseCompatPadding="true"
-            app:cardCornerRadius="@dimen/spacing_xmedium"
-            android:id="@+id/card_view_schedule_detail"
+        <fragment
+            android:id="@+id/map_detail"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map_detail"
-                android:layout_width="match_parent"
-                android:layout_height="150dp" />
-        </androidx.cardview.widget.CardView>
+            android:layout_height="150dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

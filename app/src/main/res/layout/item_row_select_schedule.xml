@@ -18,17 +18,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
-        android:paddingTop="14dp"
+        android:paddingTop="18dp"
         android:paddingRight="10dp"
-        android:paddingBottom="14dp">
+        android:paddingBottom="18dp">
 
         <ImageView
             android:id="@+id/iv_weather"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
+            android:layout_marginStart="8dp"
             tools:background="@color/colorGreen"
             tools:text="Image Weather" />
 

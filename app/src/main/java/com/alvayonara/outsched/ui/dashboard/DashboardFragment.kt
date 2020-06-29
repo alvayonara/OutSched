@@ -7,13 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.ui.location.ExerciseLocationActivity
+import com.alvayonara.outsched.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_exercise_location.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_dashboard.toolbar
 
 class DashboardFragment : Fragment() {
+
+    private lateinit var dashboardViewModel: DashboardViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,6 +26,10 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+//        val factory = ViewModelFactory.getInstance(requireActivity())
+//        dashboardViewModel =
+//            ViewModelProvider(requireActivity(), factory)[DashboardViewModel::class.java]
 
         initToolbar()
         initView()

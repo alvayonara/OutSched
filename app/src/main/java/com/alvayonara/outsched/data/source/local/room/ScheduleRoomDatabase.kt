@@ -16,13 +16,13 @@ abstract class ScheduleRoomDatabase : RoomDatabase() {
         private var INSTANCE: ScheduleRoomDatabase? = null
 
         @JvmStatic
-        fun getDatabase(context: Context): ScheduleRoomDatabase {
+        fun getInstance(context: Context): ScheduleRoomDatabase {
             if (INSTANCE == null) {
                 synchronized(ScheduleRoomDatabase::class.java) {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(
                             context.applicationContext,
-                            ScheduleRoomDatabase::class.java, "schedule_database"
+                            ScheduleRoomDatabase::class.java, "Schedules.db"
                         )
                             .build()
                     }

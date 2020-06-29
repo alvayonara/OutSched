@@ -6,8 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.ui.dashboard.schedule.PastScheduleFragment
-import com.alvayonara.outsched.ui.dashboard.schedule.UpcomingScheduleFragment
 
 class DashboardSectionPagerAdapter(
     private val context: Context,
@@ -25,8 +23,10 @@ class DashboardSectionPagerAdapter(
     override fun getItem(position: Int): Fragment {
         var fragment: Fragment? = null
         when (position) {
-            0 -> fragment = UpcomingScheduleFragment()
-            1 -> fragment = PastScheduleFragment()
+            0 -> fragment =
+                UpcomingScheduleFragment()
+            1 -> fragment =
+                PastScheduleFragment()
         }
         return fragment as Fragment
     }

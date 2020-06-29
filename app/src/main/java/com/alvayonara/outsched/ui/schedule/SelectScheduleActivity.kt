@@ -31,7 +31,7 @@ class SelectScheduleActivity : AppCompatActivity() {
 
         initToolbar()
 
-        val factory = ViewModelFactory.getInstance()
+        val factory = ViewModelFactory.getInstance(this)
         scheduleViewModel = ViewModelProvider(
             this,
             factory
