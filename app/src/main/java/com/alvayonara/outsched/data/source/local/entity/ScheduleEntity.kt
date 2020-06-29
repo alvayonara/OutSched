@@ -1,4 +1,4 @@
-package com.alvayonara.outsched.data.local.entity
+package com.alvayonara.outsched.data.source.local.entity
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo

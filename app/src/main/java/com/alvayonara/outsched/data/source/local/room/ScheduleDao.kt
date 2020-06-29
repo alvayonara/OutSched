@@ -1,8 +1,8 @@
-package com.alvayonara.outsched.data.local.room
+package com.alvayonara.outsched.data.source.local.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.alvayonara.outsched.data.local.entity.ScheduleEntity
+import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
 
 @Dao
 interface ScheduleDao {

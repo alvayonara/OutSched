@@ -1,6 +1,6 @@
 package com.alvayonara.outsched.api
 
-import com.alvayonara.outsched.data.remote.response.RequestResponse
+import com.alvayonara.outsched.data.source.remote.response.RequestResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

@@ -11,11 +11,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.data.local.entity.item.ScheduleListItem.Companion.TYPE_DATE
-import com.alvayonara.outsched.data.local.entity.item.ScheduleListItem.Companion.TYPE_GENERAL
-import com.alvayonara.outsched.data.local.entity.item.DateItem
-import com.alvayonara.outsched.data.local.entity.item.ScheduleItem
-import com.alvayonara.outsched.data.local.entity.item.ScheduleListItem
+import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem.Companion.TYPE_DATE
+import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem.Companion.TYPE_GENERAL
+import com.alvayonara.outsched.data.source.local.entity.item.DateItem
+import com.alvayonara.outsched.data.source.local.entity.item.ScheduleItem
+import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem
 import com.alvayonara.outsched.utils.ConvertUtils
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView

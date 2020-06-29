@@ -1,6 +1,6 @@
-package com.alvayonara.outsched.data.remote.response
+package com.alvayonara.outsched.data.source.remote.response
 
-import com.alvayonara.outsched.data.local.entity.ScheduleEntity
+import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
 import com.google.gson.annotations.SerializedName
 
 data class RequestResponse(

@@ -5,15 +5,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.utils.gone
-import com.alvayonara.outsched.utils.invisible
 import com.alvayonara.outsched.utils.visible
-import com.google.android.material.appbar.AppBarLayout.ScrollingViewBehavior
+import com.alvayonara.outsched.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_select_schedule.*
 
 
@@ -33,9 +31,10 @@ class SelectScheduleActivity : AppCompatActivity() {
 
         initToolbar()
 
+        val factory = ViewModelFactory.getInstance()
         scheduleViewModel = ViewModelProvider(
             this,
-            ViewModelProvider.NewInstanceFactory()
+            factory
         )[SelectScheduleViewModel::class.java]
 
         val extras = intent.extras
@@ -44,7 +43,7 @@ class SelectScheduleActivity : AppCompatActivity() {
             val latitude = extras.getString(EXTRA_LATITUDE)
             val longitude = extras.getString(EXTRA_LONGITUDE)
 
-            if (address != null || latitude != null || longitude != null){
+            if (address != null || latitude != null || longitude != null) {
                 scheduleViewModel.setAddressSchedule(address!!)
                 scheduleViewModel.setLatitudeSchedule(latitude!!)
                 scheduleViewModel.setLongitudeSchedule(longitude!!)
@@ -66,8 +65,7 @@ class SelectScheduleActivity : AppCompatActivity() {
 
         progress_bar.visible()
 
-        scheduleViewModel.setWeathersData()
-        scheduleViewModel.getWeathersData().observe(this, Observer { schedules ->
+        scheduleViewModel.getWeathers().observe(this, Observer { schedules ->
             progress_bar.gone()
 
             if (schedules != null) {

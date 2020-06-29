@@ -1,4 +1,4 @@
-package com.alvayonara.outsched.data.local.entity.item
+package com.alvayonara.outsched.data.source.local.entity.item
 
 class DateItem : ScheduleListItem() {
 
