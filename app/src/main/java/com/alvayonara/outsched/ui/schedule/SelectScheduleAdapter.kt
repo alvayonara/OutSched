@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
 import com.alvayonara.outsched.data.source.local.entity.item.DateItem
 import com.alvayonara.outsched.data.source.local.entity.item.ScheduleItem
 import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem
@@ -17,11 +15,16 @@ import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem.Co
 import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem.Companion.TYPE_GENERAL
 import com.alvayonara.outsched.ui.schedule.ScheduleDetailDialogFragment.Companion.EXTRA_SCHEDULE_DETAIL
 import com.alvayonara.outsched.utils.ConvertUtils
+import kotlinx.android.synthetic.main.dialog_select_schedule.view.*
 import kotlinx.android.synthetic.main.item_date_section.view.*
 import kotlinx.android.synthetic.main.item_row_select_schedule.view.*
+import kotlinx.android.synthetic.main.item_row_select_schedule.view.iv_weather
+import kotlinx.android.synthetic.main.item_row_select_schedule.view.tv_hour
+import kotlinx.android.synthetic.main.item_row_select_schedule.view.tv_temperature
+import kotlinx.android.synthetic.main.item_row_select_schedule.view.tv_weather
 
 
-class ScheduleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SelectScheduleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var listItem: MutableList<ScheduleListItem> = mutableListOf()
 
@@ -105,7 +108,7 @@ class ScheduleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     scheduleDetailDialogFragment.arguments = mBundle
                     scheduleDetailDialogFragment.show(
                         (context as AppCompatActivity).supportFragmentManager,
-                        "schedule_detail"
+                        ScheduleDetailDialogFragment::class.java.simpleName
                     )
                 }
             }

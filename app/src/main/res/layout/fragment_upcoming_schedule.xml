@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="#F2F2F2">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_movie_favorite"
+        android:id="@+id/rv_upcoming_schedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:listitem="@layout/item_row_select_schedule">
@@ -15,7 +15,7 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <ProgressBar
-        android:id="@+id/progress_bar_movie_favorite"
+        android:id="@+id/progress_bar_upcoming_schedule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -24,10 +24,10 @@
         android:indeterminateTintMode="src_atop" />
 
     <LinearLayout
-        android:id="@+id/lyt_empty_movie_favorite"
+        android:id="@+id/lyt_empty_upcoming_schedule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:orientation="vertical"
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:lineSpacingExtra="5dp"
-            android:text="There are no exercise schedules.\nTap the button below to add a new schedule"
+            android:text="There is no upcoming schedule yet.\nTap button below to add new schedule"
             android:gravity="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
             android:textColor="@android:color/black"

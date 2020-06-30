@@ -1,8 +1,8 @@
 package com.alvayonara.outsched.ui.onboarding
 
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.ui.dashboard.DashboardFragment
+import com.alvayonara.outsched.ui.dashboard.DashboardActivity
 import com.alvayonara.outsched.utils.Preferences
 import com.alvayonara.outsched.utils.Preferences.Companion.ON_BOARDING
 import com.alvayonara.outsched.utils.ToolbarConfig
@@ -51,33 +51,26 @@ class OnBoardingActivity : AppCompatActivity() {
         btn_get_started.setOnClickListener {
             preferences.setValues(ON_BOARDING, "1")
 
-            toDashboardFragment()
+            toDashboardActivity()
         }
 
         btn_skip.setOnClickListener {
             preferences.setValues(ON_BOARDING, "1")
 
-           toDashboardFragment()
+           toDashboardActivity()
         }
     }
 
     private fun checkOnBoardingStatus() {
         if (preferences.getValues(ON_BOARDING).equals("1")){
-            toDashboardFragment()
+            toDashboardActivity()
         }
     }
 
-    private fun toDashboardFragment(){
-        val mFragmentManager = supportFragmentManager
-        val mHomeFragment = DashboardFragment()
-        val fragment = mFragmentManager.findFragmentByTag(DashboardFragment::class.java.simpleName)
-
-        if (fragment !is DashboardFragment){
-            mFragmentManager
-                .beginTransaction()
-                .add(R.id.frame_container, mHomeFragment, DashboardFragment::class.java.simpleName)
-                .commit()
-        }
+    private fun toDashboardActivity(){
+        val intent = Intent(this, DashboardActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun initDots(index: Int) {

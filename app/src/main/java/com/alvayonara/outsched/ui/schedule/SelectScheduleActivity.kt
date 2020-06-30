@@ -61,7 +61,7 @@ class SelectScheduleActivity : AppCompatActivity() {
     }
 
     private fun getSchedulesData() {
-        val scheduleAdapter = ScheduleAdapter()
+        val scheduleAdapter = SelectScheduleAdapter()
 
         progress_bar.visible()
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.alvayonara.outsched.data.source.ScheduleRepository
 import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
+import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem
 
 class DashboardViewModel(private val scheduleRepository: ScheduleRepository) : ViewModel() {
 

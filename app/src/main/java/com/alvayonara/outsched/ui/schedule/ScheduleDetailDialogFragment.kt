@@ -1,6 +1,7 @@
 package com.alvayonara.outsched.ui.schedule
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
+import com.alvayonara.outsched.ui.dashboard.DashboardActivity
 import com.alvayonara.outsched.utils.ConvertUtils
 import com.alvayonara.outsched.viewmodel.ViewModelFactory
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -20,7 +22,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.dialog_select_schedule.*
-import kotlinx.android.synthetic.main.item_row_select_schedule.view.*
 
 class ScheduleDetailDialogFragment : DialogFragment() {
 
@@ -59,7 +60,7 @@ class ScheduleDetailDialogFragment : DialogFragment() {
                 schedule!!.latitude!!.toDouble(),
                 schedule.longitude!!.toDouble()
             )
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(savedLatLng, 18f))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(savedLatLng, 18f))
             googleMap.addMarker(MarkerOptions().position(savedLatLng))
         }
 
@@ -87,13 +88,23 @@ class ScheduleDetailDialogFragment : DialogFragment() {
         )
 
         btn_save.setOnClickListener {
-//            scheduleDetailViewModel.insert(schedule)
-            dismiss()
+            scheduleDetailViewModel.insert(schedule)
+
+            val intent = Intent(requireActivity(), DashboardActivity::class.java)
+            startActivity(intent)
+            (context as AppCompatActivity).finishAffinity()
+
+            // To do
+            showNotification()
         }
 
         btn_cancel.setOnClickListener {
             dismiss()
         }
+    }
+
+    private fun showNotification() {
+
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -108,6 +119,6 @@ class ScheduleDetailDialogFragment : DialogFragment() {
         super.onDestroyView()
 
         (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            .remove(mapFragment).commit()
+            .remove(mapFragment).commitAllowingStateLoss()
     }
 }
