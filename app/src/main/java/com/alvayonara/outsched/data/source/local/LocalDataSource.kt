@@ -31,5 +31,5 @@ class LocalDataSource private constructor(private val mScheduleDao: ScheduleDao)
 
     fun deleteSchedule(scheduleEntity: ScheduleEntity) = mScheduleDao.deleteSchedule(scheduleEntity)
 
-    fun checkSchedule(id: Int, latitude: String, longitude: String): Boolean = mScheduleDao.checkSchedules(id, latitude, longitude)
+    fun checkSchedule(time: Long, latitude: String, longitude: String): Boolean = mScheduleDao.checkSchedules(time, latitude, longitude)
 }

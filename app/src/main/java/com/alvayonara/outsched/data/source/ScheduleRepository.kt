@@ -34,9 +34,10 @@ class ScheduleRepository private constructor(
     override fun getWeathersData(
         latitude: String,
         longitude: String,
-        address: String
+        address: String,
+        id: Int
     ): LiveData<List<ScheduleListItem>> =
-        remoteDataSource.getWeathersData(latitude, longitude, address)
+        remoteDataSource.getWeathersData(latitude, longitude, address, id)
 
     override fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>> =
         localDataSource.getAllUpcomingSchedules()
@@ -53,11 +54,11 @@ class ScheduleRepository private constructor(
     override fun deleteSchedule(scheduleEntity: ScheduleEntity) =
         appExecutors.diskIO().execute { localDataSource.deleteSchedule(scheduleEntity) }
 
-    override fun checkSchedule(id: Int, latitude: String, longitude: String): LiveData<Boolean> {
+    override fun checkSchedule(time: Long, latitude: String, longitude: String): LiveData<Boolean> {
         val result = MutableLiveData<Boolean>()
 
         appExecutors.diskIO().execute {
-            result.postValue(localDataSource.checkSchedule(id, latitude, longitude))
+            result.postValue(localDataSource.checkSchedule(time, latitude, longitude))
         }
 
         return result

@@ -2,6 +2,7 @@ package com.alvayonara.outsched.ui.schedule
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alvayonara.outsched.R
+import com.alvayonara.outsched.ui.location.ExerciseLocationActivity.Companion.EXTRA_ID
 import com.alvayonara.outsched.utils.gone
 import com.alvayonara.outsched.utils.visible
 import com.alvayonara.outsched.viewmodel.ViewModelFactory
@@ -38,17 +40,20 @@ class SelectScheduleActivity : AppCompatActivity() {
         )[SelectScheduleViewModel::class.java]
 
         val extras = intent.extras
-        if (extras != null) {
-            val address = extras.getString(EXTRA_ADDRESS)
-            val latitude = extras.getString(EXTRA_LATITUDE)
-            val longitude = extras.getString(EXTRA_LONGITUDE)
+        val address = extras?.getString(EXTRA_ADDRESS)
+        val latitude = extras?.getString(EXTRA_LATITUDE)
+        val longitude = extras?.getString(EXTRA_LONGITUDE)
 
-            if (address != null || latitude != null || longitude != null) {
-                scheduleViewModel.setAddressSchedule(address!!)
-                scheduleViewModel.setLatitudeSchedule(latitude!!)
-                scheduleViewModel.setLongitudeSchedule(longitude!!)
-            }
-        }
+        // id from ExtraLocationActivity
+        val id = extras?.getInt(EXTRA_ID, 0)
+        Log.d("id_select", id.toString())
+
+        scheduleViewModel.setAddressSchedule(address!!)
+        scheduleViewModel.setLatitudeSchedule(latitude!!)
+        scheduleViewModel.setLongitudeSchedule(longitude!!)
+
+        // set id to viewmodel
+        scheduleViewModel.setIdSchedule(id!!)
 
         getSchedulesData()
     }

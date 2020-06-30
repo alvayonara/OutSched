@@ -9,7 +9,8 @@ interface ScheduleDataSource {
     fun getWeathersData(
         latitude: String,
         longitude: String,
-        address: String
+        address: String,
+        id: Int
     ): LiveData<List<ScheduleListItem>>
 
     fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>>
@@ -22,5 +23,5 @@ interface ScheduleDataSource {
 
     fun deleteSchedule(scheduleEntity: ScheduleEntity)
 
-    fun checkSchedule(id: Int, latitude: String, longitude: String): LiveData<Boolean>
+    fun checkSchedule(time: Long, latitude: String, longitude: String): LiveData<Boolean>
 }

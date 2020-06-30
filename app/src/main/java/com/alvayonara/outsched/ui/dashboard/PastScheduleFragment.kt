@@ -45,6 +45,8 @@ class PastScheduleFragment : Fragment() {
                 dashboardScheduleAdapter.setSchedules(schedules)
                 dashboardScheduleAdapter.notifyDataSetChanged()
             } else {
+                dashboardScheduleAdapter.setSchedules(schedules)
+                dashboardScheduleAdapter.notifyDataSetChanged()
                 lyt_empty_past_schedule.visible()
             }
         })

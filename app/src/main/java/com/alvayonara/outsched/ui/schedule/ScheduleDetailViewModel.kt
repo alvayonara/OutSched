@@ -13,6 +13,6 @@ class ScheduleDetailViewModel(private val scheduleRepository: ScheduleRepository
 
     fun delete(scheduleEntity: ScheduleEntity) = scheduleRepository.deleteSchedule(scheduleEntity)
 
-    fun checkScheduleData(id: Int, latitude: String, longitude: String): LiveData<Boolean> =
-        scheduleRepository.checkSchedule(id, latitude, longitude)
+    fun checkScheduleData(time: Long, latitude: String, longitude: String): LiveData<Boolean> =
+        scheduleRepository.checkSchedule(time, latitude, longitude)
 }

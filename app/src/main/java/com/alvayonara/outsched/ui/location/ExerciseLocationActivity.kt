@@ -8,6 +8,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
@@ -45,6 +46,8 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private var id: Int? = 0
+
     companion object {
         /**
          * Request code for location permission request.
@@ -52,6 +55,8 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
          * @see .onRequestPermissionsResult
          */
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+
+        const val EXTRA_ID = "extra_id"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +65,11 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
 
         initToolbar()
 
+        // Intent from change schedule (id)
+        id = intent.extras?.getInt(EXTRA_ID, 0)
+        Log.d("id_ex", id.toString())
+
+        // Initialize map fragment
         mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -159,6 +169,8 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
                             putExtra(EXTRA_ADDRESS, address)
                             putExtra(EXTRA_LATITUDE, center.latitude.toString())
                             putExtra(EXTRA_LONGITUDE, center.longitude.toString())
+
+                            putExtra(EXTRA_ID, id)
                         }
                         startActivity(intent)
                     }

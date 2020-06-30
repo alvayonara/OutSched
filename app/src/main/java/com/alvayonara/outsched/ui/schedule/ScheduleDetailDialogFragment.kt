@@ -1,6 +1,7 @@
 package com.alvayonara.outsched.ui.schedule
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
@@ -17,6 +19,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
 import com.alvayonara.outsched.ui.dashboard.DashboardActivity
+import com.alvayonara.outsched.ui.location.ExerciseLocationActivity
+import com.alvayonara.outsched.ui.location.ExerciseLocationActivity.Companion.EXTRA_ID
 import com.alvayonara.outsched.utils.ConvertUtils
 import com.alvayonara.outsched.utils.visible
 import com.alvayonara.outsched.viewmodel.ViewModelFactory
@@ -91,21 +95,14 @@ class ScheduleDetailDialogFragment : DialogFragment() {
                 .toString()
         )
 
-        // If schedule  then schedule already stored in database
-//        if (checkSchedule(schedule)) {
-//
-//        } else {
-//        }
-
         checkSchedule(schedule)
     }
 
     private fun checkSchedule(schedule: ScheduleEntity) {
         scheduleDetailViewModel.checkScheduleData(
-            schedule.id,
+            schedule.time!!,
             schedule.latitude!!, schedule.longitude!!
         ).observe(viewLifecycleOwner, Observer { result ->
-            Log.d("live", result.toString())
 
             if (result) {
                 // Set layout (delete or change schedule)
@@ -113,12 +110,49 @@ class ScheduleDetailDialogFragment : DialogFragment() {
 
                 // Change schedule button
                 btn_change.setOnClickListener {
-                    dismiss()
+                    val builder = AlertDialog.Builder(requireActivity())
+
+                    builder.setTitle("Confirmation")
+                    builder.setMessage("Do you want to change this schedule?")
+                    builder.setPositiveButton("Yes") { _, _ ->
+                        run {
+                            val intent =
+                                Intent(
+                                    requireActivity(),
+                                    ExerciseLocationActivity::class.java
+                                ).putExtra(
+                                    EXTRA_ID,
+                                    schedule.id
+                                )
+                            startActivity(intent)
+                        }
+                    }
+
+                    builder.setNegativeButton("No") { dialog: DialogInterface, _ ->
+                        dialog.cancel()
+                    }
+
+                    builder.show()
                 }
 
                 // Delete schedule button
                 btn_delete.setOnClickListener {
-                    dismiss()
+                    val builder = AlertDialog.Builder(requireActivity())
+
+                    builder.setTitle("Confirmation")
+                    builder.setMessage("Do you want to delete this schedule?")
+                    builder.setPositiveButton("Yes") { _, _ ->
+                        run {
+                            scheduleDetailViewModel.delete(schedule)
+                            dismiss()
+                        }
+                    }
+
+                    builder.setNegativeButton("No") { dialog: DialogInterface, _ ->
+                        dialog.cancel()
+                    }
+
+                    builder.show()
                 }
             } else {
                 // Set layout (cancel or save schedule)

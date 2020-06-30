@@ -48,6 +48,8 @@ class UpcomingScheduleFragment : Fragment() {
                     dashboardScheduleAdapter.setSchedules(schedules)
                     dashboardScheduleAdapter.notifyDataSetChanged()
                 } else {
+                    dashboardScheduleAdapter.setSchedules(schedules)
+                    dashboardScheduleAdapter.notifyDataSetChanged()
                     lyt_empty_upcoming_schedule.visible()
                 }
             })
