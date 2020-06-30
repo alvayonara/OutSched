@@ -32,7 +32,7 @@ class UpcomingScheduleFragment : Fragment() {
         dashboardViewModel =
             ViewModelProvider(requireActivity(), factory)[DashboardViewModel::class.java]
 
-//        getUpcomingSchedule()
+        getUpcomingSchedule()
     }
 
     private fun getUpcomingSchedule() {
