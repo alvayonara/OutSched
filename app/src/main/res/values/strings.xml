@@ -22,4 +22,7 @@
     <string name="exercise_location">Exercise Location</string>
     <string name="location">Location</string>
     <string name="cancel">Cancel</string>
+    <string name="delete">delete</string>
+    <string name="update">update</string>
+    <string name="change">Change</string>
 </resources>

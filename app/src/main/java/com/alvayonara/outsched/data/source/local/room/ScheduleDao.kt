@@ -21,4 +21,7 @@ interface ScheduleDao {
 
     @Query("SELECT * from scheduleentity WHERE reminded = 1")
     fun getAllPastSchedules(): LiveData<List<ScheduleEntity>>
+
+    @Query("SELECT * from scheduleentity WHERE id = :id AND latitude = :latitude AND longitude = :longitude")
+    fun checkSchedules(id: Int, latitude: String, longitude: String): Boolean
 }

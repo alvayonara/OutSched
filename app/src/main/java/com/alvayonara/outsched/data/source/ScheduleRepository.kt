@@ -1,11 +1,14 @@
 package com.alvayonara.outsched.data.source
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.alvayonara.outsched.data.source.local.LocalDataSource
 import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
 import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem
 import com.alvayonara.outsched.data.source.remote.RemoteDataSource
 import com.alvayonara.outsched.utils.AppExecutors
+import kotlin.math.log
 
 class ScheduleRepository private constructor(
     private val remoteDataSource: RemoteDataSource,
@@ -49,4 +52,14 @@ class ScheduleRepository private constructor(
 
     override fun deleteSchedule(scheduleEntity: ScheduleEntity) =
         appExecutors.diskIO().execute { localDataSource.deleteSchedule(scheduleEntity) }
+
+    override fun checkSchedule(id: Int, latitude: String, longitude: String): LiveData<Boolean> {
+        val result = MutableLiveData<Boolean>()
+
+        appExecutors.diskIO().execute {
+            result.postValue(localDataSource.checkSchedule(id, latitude, longitude))
+        }
+
+        return result
+    }
 }

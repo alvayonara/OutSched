@@ -92,10 +92,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lyt_dialog_select_schedule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/spacing_medium"
                 android:gravity="end"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <Button
@@ -114,6 +116,35 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/save"
+                    android:textColor="@color/colorBlue" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lyt_dialog_saved_schedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_medium"
+                android:gravity="end"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    style="@style/Button.Primary.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/delete"
+                    android:textColor="@color/colorAccentPink" />
+
+                <Button
+                    android:id="@+id/btn_change"
+                    style="@style/Button.Primary.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/change"
                     android:textColor="@color/colorBlue" />
 
             </LinearLayout>

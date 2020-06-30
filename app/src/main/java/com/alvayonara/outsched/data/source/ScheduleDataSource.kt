@@ -21,4 +21,6 @@ interface ScheduleDataSource {
     fun updateSchedule(scheduleEntity: ScheduleEntity)
 
     fun deleteSchedule(scheduleEntity: ScheduleEntity)
+
+    fun checkSchedule(id: Int, latitude: String, longitude: String): LiveData<Boolean>
 }

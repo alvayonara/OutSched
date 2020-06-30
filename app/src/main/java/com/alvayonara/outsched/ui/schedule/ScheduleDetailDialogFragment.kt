@@ -5,23 +5,27 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
 import com.alvayonara.outsched.ui.dashboard.DashboardActivity
 import com.alvayonara.outsched.utils.ConvertUtils
+import com.alvayonara.outsched.utils.visible
 import com.alvayonara.outsched.viewmodel.ViewModelFactory
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.dialog_select_schedule.*
+
 
 class ScheduleDetailDialogFragment : DialogFragment() {
 
@@ -87,23 +91,60 @@ class ScheduleDetailDialogFragment : DialogFragment() {
                 .toString()
         )
 
-        btn_save.setOnClickListener {
-            scheduleDetailViewModel.insert(schedule)
+        // If schedule  then schedule already stored in database
+//        if (checkSchedule(schedule)) {
+//
+//        } else {
+//        }
 
-            val intent = Intent(requireActivity(), DashboardActivity::class.java)
-            startActivity(intent)
-            (context as AppCompatActivity).finishAffinity()
-
-            // To do
-            showNotification()
-        }
-
-        btn_cancel.setOnClickListener {
-            dismiss()
-        }
+        checkSchedule(schedule)
     }
 
-    private fun showNotification() {
+    private fun checkSchedule(schedule: ScheduleEntity) {
+        scheduleDetailViewModel.checkScheduleData(
+            schedule.id,
+            schedule.latitude!!, schedule.longitude!!
+        ).observe(viewLifecycleOwner, Observer { result ->
+            Log.d("live", result.toString())
+
+            if (result) {
+                // Set layout (delete or change schedule)
+                lyt_dialog_saved_schedule.visible()
+
+                // Change schedule button
+                btn_change.setOnClickListener {
+                    dismiss()
+                }
+
+                // Delete schedule button
+                btn_delete.setOnClickListener {
+                    dismiss()
+                }
+            } else {
+                // Set layout (cancel or save schedule)
+                lyt_dialog_select_schedule.visible()
+
+                // Save new schedule button
+                btn_save.setOnClickListener {
+                    // Insert schedule to database (new data)
+                    scheduleDetailViewModel.insert(schedule)
+
+                    val intent = Intent(requireActivity(), DashboardActivity::class.java)
+                    startActivity(intent)
+                    (context as AppCompatActivity).finishAffinity()
+
+                    // Show notification (schedule already saved)
+                    showNotification(schedule)
+                }
+
+                btn_cancel.setOnClickListener {
+                    dismiss()
+                }
+            }
+        })
+    }
+
+    private fun showNotification(schedule: ScheduleEntity) {
 
     }
 

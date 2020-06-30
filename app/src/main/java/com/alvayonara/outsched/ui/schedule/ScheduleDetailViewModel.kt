@@ -1,5 +1,6 @@
 package com.alvayonara.outsched.ui.schedule
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.alvayonara.outsched.data.source.ScheduleRepository
 import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
@@ -11,4 +12,7 @@ class ScheduleDetailViewModel(private val scheduleRepository: ScheduleRepository
     fun update(scheduleEntity: ScheduleEntity) = scheduleRepository.updateSchedule(scheduleEntity)
 
     fun delete(scheduleEntity: ScheduleEntity) = scheduleRepository.deleteSchedule(scheduleEntity)
+
+    fun checkScheduleData(id: Int, latitude: String, longitude: String): LiveData<Boolean> =
+        scheduleRepository.checkSchedule(id, latitude, longitude)
 }
