@@ -10,7 +10,8 @@ interface ScheduleDataSource {
         latitude: String,
         longitude: String,
         address: String,
-        id: Int
+        id: Int,
+        requestCode: Int
     ): LiveData<List<ScheduleListItem>>
 
     fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>>

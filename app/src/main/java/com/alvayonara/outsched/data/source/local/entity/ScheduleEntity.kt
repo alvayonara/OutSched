@@ -40,5 +40,7 @@ data class ScheduleEntity(
     var longitude: String? = null,
 
     @ColumnInfo(name = "reminded")
-    var reminded: Boolean? = false
+    var reminded: Boolean? = false,
+
+    var requestCode: Int = 0
 ) : Parcelable

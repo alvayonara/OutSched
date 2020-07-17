@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".api.ApiRepository"
         android:allowBackup="false"
@@ -15,8 +18,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.dashboard.DashboardActivity"></activity>
-        <activity android:name=".ui.dashboard.SampleActivity" />
+        <receiver
+            android:name=".receiver.ScheduleReminderReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".ui.dashboard.DashboardActivity" />
         <activity android:name=".ui.schedule.SelectScheduleActivity" />
         <activity
             android:name=".ui.location.ExerciseLocationActivity"

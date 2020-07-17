@@ -32,7 +32,8 @@ class RemoteDataSource {
         latitude: String,
         longitude: String,
         address: String,
-        id: Int
+        id: Int,
+        requestCode: Int
     ): LiveData<List<ScheduleListItem>> {
         val weathersDataResults = MutableLiveData<List<ScheduleListItem>>()
 
@@ -59,7 +60,8 @@ class RemoteDataSource {
                                 latitude,
                                 longitude,
                                 address,
-                                id
+                                id,
+                                requestCode
                             )
                         )
                     )
@@ -73,8 +75,8 @@ class RemoteDataSource {
         latitude: String,
         longitude: String,
         address: String,
-        id: Int
-
+        id: Int,
+        requestCode: Int
     ): ArrayList<ScheduleEntity> {
         val listSchedules = ArrayList<ScheduleEntity>()
 
@@ -83,6 +85,7 @@ class RemoteDataSource {
             schedules[i].latitude = latitude
             schedules[i].longitude = longitude
             schedules[i].id = id
+            schedules[i].requestCode = requestCode
         }
 
         // array weather data

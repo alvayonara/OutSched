@@ -14,6 +14,8 @@ class SelectScheduleViewModel(private val scheduleRepository: ScheduleRepository
 
     private val id = MutableLiveData<Int>()
 
+    private val requestCode = MutableLiveData<Int>()
+
     fun setAddressSchedule(address: String) {
         this.address.value = address
     }
@@ -30,11 +32,16 @@ class SelectScheduleViewModel(private val scheduleRepository: ScheduleRepository
         this.id.value = id
     }
 
+    fun setRequestCodeSchedule(requestCode: Int) {
+        this.requestCode.value = requestCode
+    }
+
     fun getWeathers(): LiveData<List<ScheduleListItem>> =
         scheduleRepository.getWeathersData(
             latitude.value!!,
             longitude.value!!,
             address.value!!,
-            id.value!!
+            id.value!!,
+            requestCode.value!!
         )
 }

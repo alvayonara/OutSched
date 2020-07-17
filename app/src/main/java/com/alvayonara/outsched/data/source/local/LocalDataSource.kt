@@ -9,7 +9,6 @@ import com.alvayonara.outsched.utils.GroupScheduleUtils.consolidateSchedule
 
 class LocalDataSource private constructor(private val mScheduleDao: ScheduleDao) {
 
-
     companion object {
         @Volatile
         private var instance: LocalDataSource? = null
@@ -20,8 +19,7 @@ class LocalDataSource private constructor(private val mScheduleDao: ScheduleDao)
             }
     }
 
-    fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>> =
-        mScheduleDao.getAllUpcomingSchedules()
+    fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>> = mScheduleDao.getAllUpcomingSchedules()
 
     fun getAllPastSchedules(): LiveData<List<ScheduleEntity>> = mScheduleDao.getAllPastSchedules()
 

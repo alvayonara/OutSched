@@ -1,6 +1,5 @@
 package com.alvayonara.outsched.data.source
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.alvayonara.outsched.data.source.local.LocalDataSource
@@ -8,7 +7,6 @@ import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
 import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem
 import com.alvayonara.outsched.data.source.remote.RemoteDataSource
 import com.alvayonara.outsched.utils.AppExecutors
-import kotlin.math.log
 
 class ScheduleRepository private constructor(
     private val remoteDataSource: RemoteDataSource,
@@ -35,12 +33,12 @@ class ScheduleRepository private constructor(
         latitude: String,
         longitude: String,
         address: String,
-        id: Int
+        id: Int,
+        requestCode: Int
     ): LiveData<List<ScheduleListItem>> =
-        remoteDataSource.getWeathersData(latitude, longitude, address, id)
+        remoteDataSource.getWeathersData(latitude, longitude, address, id, requestCode)
 
-    override fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>> =
-        localDataSource.getAllUpcomingSchedules()
+    override fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>> = localDataSource.getAllUpcomingSchedules()
 
     override fun getAllPastSchedules(): LiveData<List<ScheduleEntity>> =
         localDataSource.getAllPastSchedules()

@@ -25,6 +25,7 @@ class SelectScheduleActivity : AppCompatActivity() {
         const val EXTRA_ADDRESS = "extra_address"
         const val EXTRA_LATITUDE = "extra_latitude"
         const val EXTRA_LONGITUDE = "extra_longitude"
+        const val EXTRA_REQUEST_CODE = "extra_request_code"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,22 +41,23 @@ class SelectScheduleActivity : AppCompatActivity() {
         )[SelectScheduleViewModel::class.java]
 
         val extras = intent.extras
+        initExtras(extras)
+
+        getSchedulesData()
+    }
+
+    private fun initExtras(extras: Bundle?) {
         val address = extras?.getString(EXTRA_ADDRESS)
         val latitude = extras?.getString(EXTRA_LATITUDE)
         val longitude = extras?.getString(EXTRA_LONGITUDE)
-
-        // id from ExtraLocationActivity
         val id = extras?.getInt(EXTRA_ID, 0)
-        Log.d("id_select", id.toString())
+        val requestCode = extras?.getInt(EXTRA_REQUEST_CODE, 0)
 
         scheduleViewModel.setAddressSchedule(address!!)
         scheduleViewModel.setLatitudeSchedule(latitude!!)
         scheduleViewModel.setLongitudeSchedule(longitude!!)
-
-        // set id to viewmodel
         scheduleViewModel.setIdSchedule(id!!)
-
-        getSchedulesData()
+        scheduleViewModel.setRequestCodeSchedule(requestCode!!)
     }
 
     private fun initToolbar() {

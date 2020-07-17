@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
@@ -18,9 +19,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
+import com.alvayonara.outsched.receiver.ScheduleReminderReceiver
 import com.alvayonara.outsched.ui.dashboard.DashboardActivity
 import com.alvayonara.outsched.ui.location.ExerciseLocationActivity
 import com.alvayonara.outsched.ui.location.ExerciseLocationActivity.Companion.EXTRA_ID
+import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_REQUEST_CODE
 import com.alvayonara.outsched.utils.ConvertUtils
 import com.alvayonara.outsched.utils.visible
 import com.alvayonara.outsched.viewmodel.ViewModelFactory
@@ -30,11 +33,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.dialog_select_schedule.*
 
-
 class ScheduleDetailDialogFragment : DialogFragment() {
 
     private lateinit var scheduleDetailViewModel: ScheduleDetailViewModel
     private lateinit var mapFragment: SupportMapFragment
+
+    private lateinit var scheduleReminderReceiver: ScheduleReminderReceiver
 
     companion object {
         const val EXTRA_SCHEDULE_DETAIL = "extra_schedule_detail"
@@ -55,7 +59,12 @@ class ScheduleDetailDialogFragment : DialogFragment() {
         if (arguments != null) {
             val schedule = arguments!!.getParcelable<ScheduleEntity>(EXTRA_SCHEDULE_DETAIL)
             initView(schedule)
+
+            Log.d("idsched", schedule?.id.toString())
+            Log.d("requestcode", schedule?.requestCode.toString())
         }
+
+        scheduleReminderReceiver = ScheduleReminderReceiver()
     }
 
     private fun initView(schedule: ScheduleEntity?) {
@@ -116,14 +125,17 @@ class ScheduleDetailDialogFragment : DialogFragment() {
                     builder.setMessage("Do you want to change this schedule?")
                     builder.setPositiveButton("Yes") { _, _ ->
                         run {
+                            dismiss()
+
                             val intent =
                                 Intent(
                                     requireActivity(),
                                     ExerciseLocationActivity::class.java
-                                ).putExtra(
-                                    EXTRA_ID,
-                                    schedule.id
-                                )
+                                ).apply {
+                                    putExtra(EXTRA_ID, schedule.id)
+                                    putExtra(EXTRA_REQUEST_CODE, schedule.requestCode)
+                                }
+
                             startActivity(intent)
                         }
                     }
@@ -143,6 +155,12 @@ class ScheduleDetailDialogFragment : DialogFragment() {
                     builder.setMessage("Do you want to delete this schedule?")
                     builder.setPositiveButton("Yes") { _, _ ->
                         run {
+                            // Cancel alarm
+                            scheduleReminderReceiver.cancelAlarm(
+                                requireActivity(),
+                                schedule.requestCode
+                            )
+
                             scheduleDetailViewModel.delete(schedule)
                             dismiss()
                         }
@@ -160,6 +178,15 @@ class ScheduleDetailDialogFragment : DialogFragment() {
 
                 // Save new schedule button
                 btn_save.setOnClickListener {
+                    // If request code is 0 then the schedule are not saved yet on db
+                    if (schedule.requestCode == 0) {
+                        // Set new request code
+                        schedule.requestCode = System.currentTimeMillis().toInt()
+                    }
+
+                    // Set alarm
+                    scheduleReminderReceiver.setScheduleReminder(requireActivity(), schedule)
+
                     // Insert schedule to database (new data)
                     scheduleDetailViewModel.insert(schedule)
 
@@ -167,8 +194,11 @@ class ScheduleDetailDialogFragment : DialogFragment() {
                     startActivity(intent)
                     (context as AppCompatActivity).finishAffinity()
 
-                    // Show notification (schedule already saved)
-                    showNotification(schedule)
+                    Toast.makeText(
+                        requireActivity(),
+                        "Schedule successfully saved",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
                 btn_cancel.setOnClickListener {
@@ -176,10 +206,6 @@ class ScheduleDetailDialogFragment : DialogFragment() {
                 }
             }
         })
-    }
-
-    private fun showNotification(schedule: ScheduleEntity) {
-
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

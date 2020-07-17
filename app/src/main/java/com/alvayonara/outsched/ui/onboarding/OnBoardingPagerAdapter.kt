@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntegerRes
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.viewpager.widget.PagerAdapter
 import com.alvayonara.outsched.R
 import kotlinx.android.synthetic.main.item_on_boarding.view.*
@@ -16,9 +15,9 @@ class OnBoardingPagerAdapter(private val context: Context) : PagerAdapter() {
     companion object {
         @IntegerRes
         private val onBoardingImageViews = intArrayOf(
-            R.drawable.ic_jogging,
-            R.drawable.ic_jogging,
-            R.drawable.ic_jogging
+            R.drawable.ic_jogging_color,
+            R.drawable.ic_jogging_color,
+            R.drawable.ic_jogging_color
         )
 
         @StringRes

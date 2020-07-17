@@ -21,6 +21,7 @@ import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_ADDRESS
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_LATITUDE
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_LONGITUDE
+import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_REQUEST_CODE
 import com.alvayonara.outsched.utils.PermissionUtils.PermissionDeniedDialog.Companion.newInstance
 import com.alvayonara.outsched.utils.PermissionUtils.isPermissionGranted
 import com.alvayonara.outsched.utils.PermissionUtils.requestPermission
@@ -48,6 +49,8 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private var id: Int? = 0
 
+    private var requestCode: Int? = 0
+
     companion object {
         /**
          * Request code for location permission request.
@@ -67,7 +70,8 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
 
         // Intent from change schedule (id)
         id = intent.extras?.getInt(EXTRA_ID, 0)
-        Log.d("id_ex", id.toString())
+
+        requestCode = intent.extras?.getInt(EXTRA_REQUEST_CODE, 0)
 
         // Initialize map fragment
         mapFragment = supportFragmentManager
@@ -171,6 +175,8 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
                             putExtra(EXTRA_LONGITUDE, center.longitude.toString())
 
                             putExtra(EXTRA_ID, id)
+
+                            putExtra(EXTRA_REQUEST_CODE, requestCode)
                         }
                         startActivity(intent)
                     }
