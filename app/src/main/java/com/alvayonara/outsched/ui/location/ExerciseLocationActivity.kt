@@ -70,7 +70,6 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
 
         // Intent from change schedule (id)
         id = intent.extras?.getInt(EXTRA_ID, 0)
-
         requestCode = intent.extras?.getInt(EXTRA_REQUEST_CODE, 0)
 
         // Initialize map fragment
@@ -173,9 +172,7 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
                             putExtra(EXTRA_ADDRESS, address)
                             putExtra(EXTRA_LATITUDE, center.latitude.toString())
                             putExtra(EXTRA_LONGITUDE, center.longitude.toString())
-
                             putExtra(EXTRA_ID, id)
-
                             putExtra(EXTRA_REQUEST_CODE, requestCode)
                         }
                         startActivity(intent)

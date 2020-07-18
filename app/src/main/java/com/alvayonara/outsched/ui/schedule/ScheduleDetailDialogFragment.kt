@@ -25,6 +25,8 @@ import com.alvayonara.outsched.ui.location.ExerciseLocationActivity
 import com.alvayonara.outsched.ui.location.ExerciseLocationActivity.Companion.EXTRA_ID
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_REQUEST_CODE
 import com.alvayonara.outsched.utils.ConvertUtils
+import com.alvayonara.outsched.utils.gone
+import com.alvayonara.outsched.utils.invisible
 import com.alvayonara.outsched.utils.visible
 import com.alvayonara.outsched.viewmodel.ViewModelFactory
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -59,9 +61,6 @@ class ScheduleDetailDialogFragment : DialogFragment() {
         if (arguments != null) {
             val schedule = arguments!!.getParcelable<ScheduleEntity>(EXTRA_SCHEDULE_DETAIL)
             initView(schedule)
-
-            Log.d("idsched", schedule?.id.toString())
-            Log.d("requestcode", schedule?.requestCode.toString())
         }
 
         scheduleReminderReceiver = ScheduleReminderReceiver()
@@ -114,6 +113,11 @@ class ScheduleDetailDialogFragment : DialogFragment() {
         ).observe(viewLifecycleOwner, Observer { result ->
 
             if (result) {
+
+                if (schedule.requestCode < System.currentTimeMillis()) {
+                    btn_change.gone()
+                }
+
                 // Set layout (delete or change schedule)
                 lyt_dialog_saved_schedule.visible()
 
@@ -184,11 +188,11 @@ class ScheduleDetailDialogFragment : DialogFragment() {
                         schedule.requestCode = System.currentTimeMillis().toInt()
                     }
 
-                    // Set alarm
-                    scheduleReminderReceiver.setScheduleReminder(requireActivity(), schedule)
-
                     // Insert schedule to database (new data)
                     scheduleDetailViewModel.insert(schedule)
+
+                    // Set alarm
+                    scheduleReminderReceiver.setScheduleReminder(requireActivity(), schedule)
 
                     val intent = Intent(requireActivity(), DashboardActivity::class.java)
                     startActivity(intent)

@@ -38,20 +38,21 @@ class PastScheduleFragment : Fragment() {
 
         progress_bar_past_schedule.visible()
 
-        dashboardViewModel.getPastSchedules().observe(viewLifecycleOwner, Observer { schedules ->
-            progress_bar_past_schedule.gone()
+        dashboardViewModel.getPastSchedules()
+            .observe(viewLifecycleOwner, Observer { schedules ->
+                progress_bar_past_schedule.gone()
 
-            if (schedules.isNotEmpty()){
-                dashboardScheduleAdapter.setSchedules(schedules)
-                dashboardScheduleAdapter.notifyDataSetChanged()
-            } else {
-                dashboardScheduleAdapter.setSchedules(schedules)
-                dashboardScheduleAdapter.notifyDataSetChanged()
-                lyt_empty_past_schedule.visible()
-            }
-        })
+                if (schedules.isNotEmpty()) {
+                    dashboardScheduleAdapter.setSchedules(schedules)
+                    dashboardScheduleAdapter.notifyDataSetChanged()
+                } else {
+                    dashboardScheduleAdapter.setSchedules(schedules)
+                    dashboardScheduleAdapter.notifyDataSetChanged()
+                    lyt_empty_past_schedule.visible()
+                }
+            })
 
-        with(rv_past_schedule){
+        with(rv_past_schedule) {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = dashboardScheduleAdapter
         }

@@ -16,6 +16,9 @@ interface ScheduleDao {
     @Delete
     fun deleteSchedule(schedule: ScheduleEntity)
 
+    @Query("DELETE FROM scheduleentity WHERE request_code = :requestCode")
+    fun deleteScheduleByRequestCode(requestCode: Int)
+
     @Query("SELECT * from scheduleentity WHERE reminded = 0")
     fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>>
 

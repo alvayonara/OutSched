@@ -42,5 +42,6 @@ data class ScheduleEntity(
     @ColumnInfo(name = "reminded")
     var reminded: Boolean? = false,
 
+    @ColumnInfo(name = "request_code")
     var requestCode: Int = 0
 ) : Parcelable
