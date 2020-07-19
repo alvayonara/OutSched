@@ -48,7 +48,6 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private var id: Int? = 0
-
     private var requestCode: Int? = 0
 
     companion object {
@@ -68,7 +67,7 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
 
         initToolbar()
 
-        // Intent from change schedule (id)
+        // Intent from change schedule (id & request code)
         id = intent.extras?.getInt(EXTRA_ID, 0)
         requestCode = intent.extras?.getInt(EXTRA_REQUEST_CODE, 0)
 

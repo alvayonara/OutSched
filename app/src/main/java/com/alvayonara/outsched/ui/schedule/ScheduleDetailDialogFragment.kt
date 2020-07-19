@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,6 @@ import com.alvayonara.outsched.ui.location.ExerciseLocationActivity.Companion.EX
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_REQUEST_CODE
 import com.alvayonara.outsched.utils.ConvertUtils
 import com.alvayonara.outsched.utils.gone
-import com.alvayonara.outsched.utils.invisible
 import com.alvayonara.outsched.utils.visible
 import com.alvayonara.outsched.viewmodel.ViewModelFactory
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -114,7 +112,7 @@ class ScheduleDetailDialogFragment : DialogFragment() {
 
             if (result) {
 
-                if (schedule.requestCode < System.currentTimeMillis()) {
+                if (schedule.time!! * 1000 < System.currentTimeMillis()) {
                     btn_change.gone()
                 }
 

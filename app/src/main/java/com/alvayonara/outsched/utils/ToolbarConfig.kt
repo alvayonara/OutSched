@@ -2,9 +2,12 @@ package com.alvayonara.outsched.utils
 
 import android.app.Activity
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Build
+import android.view.Menu
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 
@@ -36,6 +39,14 @@ object ToolbarConfig {
             var flags = view.systemUiVisibility
             flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             view.systemUiVisibility = flags
+        }
+    }
+
+    fun changeMenuIconColor(menu: Menu, @ColorInt color: Int) {
+        for (i in 0 until menu.size()) {
+            val drawable = menu.getItem(i).icon ?: continue
+            drawable.mutate()
+            drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         }
     }
 }

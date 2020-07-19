@@ -10,18 +10,14 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.os.AsyncTask
 import android.os.Build
-import android.os.Bundle
-import android.os.DropBoxManager.EXTRA_TIME
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
 import com.alvayonara.outsched.data.source.local.room.ScheduleRoomDatabase
-import com.alvayonara.outsched.ui.location.ExerciseLocationActivity.Companion.EXTRA_ID
+import com.alvayonara.outsched.ui.dashboard.DashboardActivity
 import com.alvayonara.outsched.utils.ConvertUtils
 import java.util.*
-
 
 class ScheduleReminderReceiver : BroadcastReceiver() {
 
@@ -39,19 +35,24 @@ class ScheduleReminderReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
+        val time = intent.getLongExtra(EXTRA_TIME, 0)
+        val summary = intent.getStringExtra(EXTRA_SUMMARY)
+        val icon = intent.getStringExtra(EXTRA_ICON)
+        val temperature = intent.getDoubleExtra(EXTRA_TEMPERATURE, 0.0)
+        val address = intent.getStringExtra(EXTRA_ADDRESS)
+        val latitude = intent.getStringExtra(EXTRA_LATITUDE)
+        val longitude = intent.getStringExtra(EXTRA_LONGITUDE)
         val requestCode = intent.getIntExtra(EXTRA_REQUEST_CODE, 0)
-
-        Log.d("requestCode", requestCode.toString())
 
         val scheduleReminded = ScheduleEntity(
             0,
-            intent.getLongExtra(EXTRA_TIME, 0),
-            intent.getStringExtra(EXTRA_SUMMARY),
-            intent.getStringExtra(EXTRA_ICON),
-            intent.getDoubleExtra(EXTRA_TEMPERATURE, 0.0),
-            intent.getStringExtra(EXTRA_ADDRESS),
-            intent.getStringExtra(EXTRA_LATITUDE),
-            intent.getStringExtra(EXTRA_LONGITUDE),
+            time,
+            summary,
+            icon,
+            temperature,
+            address,
+            latitude,
+            longitude,
             true,
             requestCode
         )
@@ -66,7 +67,7 @@ class ScheduleReminderReceiver : BroadcastReceiver() {
             }
         }
 
-        // notification schedule reminder
+        // Notification schedule reminder
         showNotificationSchedule(context, scheduleReminded)
     }
 
@@ -74,22 +75,35 @@ class ScheduleReminderReceiver : BroadcastReceiver() {
         val channelId = "Channel_1"
         val channelName = "Schedule Reminder channel"
 
+        val message =
+            "Hari ini anda memiliki jadwal olahraga pukul ${ConvertUtils.convertTimeToHour(
+                scheduleEntity.time
+            )}. " +
+                    "\nSelamat berolahraga!"
+
+        // Set big text notification
+        val bigText =
+            NotificationCompat.BigTextStyle()
+        bigText.bigText(message)
+
+        // Notification intent
+        val pendingIntentToApp =
+            PendingIntent.getActivity(context, 0, Intent(context, DashboardActivity::class.java), 0)
+
         val notificationManagerCompat =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_jogging)
+            .setContentIntent(pendingIntentToApp)
             .setContentTitle("Reminder Olahraga")
-            .setContentText(
-                "Hari ini anda memiliki jadwal olahraga pukul ${ConvertUtils.convertTimeToHour(
-                    scheduleEntity.time
-                )}. " +
-                        "\nSelamat berolahraga!"
-            )
+            .setContentText(message)
             .setAutoCancel(true)
             .setColor(ContextCompat.getColor(context, android.R.color.transparent))
             .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             .setSound(alarmSound)
+            .setStyle(bigText);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
@@ -101,6 +115,7 @@ class ScheduleReminderReceiver : BroadcastReceiver() {
             builder.setChannelId(channelId)
             notificationManagerCompat.createNotificationChannel(channel)
         }
+
         val notification = builder.build()
         notificationManagerCompat.notify(scheduleEntity.requestCode, notification)
     }
@@ -133,11 +148,6 @@ class ScheduleReminderReceiver : BroadcastReceiver() {
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeArray[0]))
         calendar.set(Calendar.MINUTE, Integer.parseInt(timeArray[1]))
         calendar.set(Calendar.SECOND, 0)
-
-//        calendar.set(Calendar.DAY_OF_MONTH, 18)
-//        calendar.set(Calendar.HOUR_OF_DAY, 15)
-//        calendar.set(Calendar.MINUTE, 50)
-//        calendar.set(Calendar.SECOND, 0)
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,

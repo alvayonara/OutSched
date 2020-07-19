@@ -11,9 +11,7 @@ class SelectScheduleViewModel(private val scheduleRepository: ScheduleRepository
     private val address = MutableLiveData<String>()
     private val latitude = MutableLiveData<String>()
     private val longitude = MutableLiveData<String>()
-
     private val id = MutableLiveData<Int>()
-
     private val requestCode = MutableLiveData<Int>()
 
     fun setAddressSchedule(address: String) {
