@@ -1,20 +1,21 @@
 package com.alvayonara.outsched.ui.settings
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.utils.ToolbarConfig
-import kotlinx.android.synthetic.main.activity_exercise_location.*
 import kotlinx.android.synthetic.main.activity_exercise_location.toolbar
-import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.activity_settings_about.*
 
-class SettingsActivity : AppCompatActivity() {
+
+class SettingsAboutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        setContentView(R.layout.activity_settings_about)
 
         initToolbar()
         initView()
@@ -22,15 +23,22 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "Settings"
+        supportActionBar?.title = "About Apps"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         ToolbarConfig.setSystemBarColor(this, R.color.colorGreen)
     }
 
     private fun initView() {
-        lyt_about_apps_settings.setOnClickListener {
-            val intent = Intent(this, SettingsAboutActivity::class.java)
+        lyt_author.setOnClickListener {
+            val intent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/alva-yonara-puramandya/"))
+            startActivity(intent)
+        }
+
+        iv_dark_sky.setOnClickListener {
+            val intent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://darksky.net/poweredby/"))
             startActivity(intent)
         }
     }

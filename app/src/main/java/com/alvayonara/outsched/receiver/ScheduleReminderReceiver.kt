@@ -22,7 +22,6 @@ import java.util.*
 class ScheduleReminderReceiver : BroadcastReceiver() {
 
     companion object {
-        const val EXTRA_ID = "id"
         const val EXTRA_TIME = "time"
         const val EXTRA_SUMMARY = "summary"
         const val EXTRA_ICON = "icon"
@@ -76,10 +75,10 @@ class ScheduleReminderReceiver : BroadcastReceiver() {
         val channelName = "Schedule Reminder channel"
 
         val message =
-            "Hari ini anda memiliki jadwal olahraga pukul ${ConvertUtils.convertTimeToHour(
+            "You have exercise schedule today at ${ConvertUtils.convertTimeToHour(
                 scheduleEntity.time
             )}. " +
-                    "\nSelamat berolahraga!"
+                    "\nEnjoy!"
 
         // Set big text notification
         val bigText =
@@ -96,7 +95,7 @@ class ScheduleReminderReceiver : BroadcastReceiver() {
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_jogging)
             .setContentIntent(pendingIntentToApp)
-            .setContentTitle("Reminder Olahraga")
+            .setContentTitle("Exercise Reminder")
             .setContentText(message)
             .setAutoCancel(true)
             .setColor(ContextCompat.getColor(context, android.R.color.transparent))
@@ -127,7 +126,6 @@ class ScheduleReminderReceiver : BroadcastReceiver() {
         val time = ConvertUtils.convertTimeToHour(scheduleEntity.time)
 
         val intent = Intent(context, ScheduleReminderReceiver::class.java).apply {
-            putExtra(EXTRA_ID, scheduleEntity.id)
             putExtra(EXTRA_TIME, scheduleEntity.time)
             putExtra(EXTRA_SUMMARY, scheduleEntity.summary)
             putExtra(EXTRA_ICON, scheduleEntity.icon)

@@ -165,6 +165,12 @@ class ScheduleDetailDialogFragment : DialogFragment() {
 
                             scheduleDetailViewModel.delete(schedule)
                             dismiss()
+
+                            Toast.makeText(
+                                requireActivity(),
+                                "Schedule successfully deleted",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
 
