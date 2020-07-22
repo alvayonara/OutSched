@@ -23,7 +23,7 @@ class OnBoardingActivity : AppCompatActivity() {
     private lateinit var preferences: Preferences
 
     companion object {
-        private const val TOTAL_STEPPER = 3
+        private const val TOTAL_STEPPER = 4
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,24 +50,22 @@ class OnBoardingActivity : AppCompatActivity() {
         btn_get_started.gone()
         btn_get_started.setOnClickListener {
             preferences.setValues(ON_BOARDING, "1")
-
             toDashboardActivity()
         }
 
         btn_skip.setOnClickListener {
             preferences.setValues(ON_BOARDING, "1")
-
-           toDashboardActivity()
-        }
-    }
-
-    private fun checkOnBoardingStatus() {
-        if (preferences.getValues(ON_BOARDING).equals("1")){
             toDashboardActivity()
         }
     }
 
-    private fun toDashboardActivity(){
+    private fun checkOnBoardingStatus() {
+        if (preferences.getValues(ON_BOARDING).equals("1")) {
+            toDashboardActivity()
+        }
+    }
+
+    private fun toDashboardActivity() {
         val intent = Intent(this, DashboardActivity::class.java)
         startActivity(intent)
         finish()
@@ -112,9 +110,10 @@ class OnBoardingActivity : AppCompatActivity() {
             // Position start from 0
             // 0 -> dot 1
             // 1 -> dot 2
-            // 2 -> last dot (dot 3)
+            // 2 -> dot 3
+            // 3 -> last dot (dot 4)
             // set visibility based on position
-            if (position == 2) {
+            if (position == 3) {
                 // Set get started button to visible
                 btn_get_started.visible()
             } else {

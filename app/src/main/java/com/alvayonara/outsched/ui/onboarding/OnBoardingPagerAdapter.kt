@@ -15,23 +15,26 @@ class OnBoardingPagerAdapter(private val context: Context) : PagerAdapter() {
     companion object {
         @IntegerRes
         private val onBoardingImageViews = intArrayOf(
-            R.drawable.ic_jogging_color,
-            R.drawable.ic_jogging_color,
-            R.drawable.ic_jogging_color
+            R.drawable.ic_on_boarding_jogging,
+            R.drawable.ic_on_boarding_map,
+            R.drawable.ic_on_boarding_date_picker,
+            R.drawable.ic_on_boarding_notification
         )
 
         @StringRes
         private val onBoardingTitles = intArrayOf(
-            R.string.app_name,
-            R.string.app_name,
-            R.string.app_name
+            R.string.on_boarding_name_1,
+            R.string.on_boarding_name_2,
+            R.string.on_boarding_name_3,
+            R.string.on_boarding_name_4
         )
 
         @StringRes
         private val onBoardingDescriptions = intArrayOf(
-            R.string.get_started,
-            R.string.get_started,
-            R.string.get_started
+            R.string.on_boarding_desc_1,
+            R.string.on_boarding_desc_2,
+            R.string.on_boarding_desc_3,
+            R.string.on_boarding_desc_4
         )
     }
 
@@ -50,7 +53,7 @@ class OnBoardingPagerAdapter(private val context: Context) : PagerAdapter() {
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
 
-    override fun getCount(): Int = 3
+    override fun getCount(): Int = 4
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         val view = `object` as View

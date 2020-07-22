@@ -1,15 +1,13 @@
 package com.alvayonara.outsched.receiver
 
-import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.AsyncTask
 import android.os.Build
+import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.alvayonara.outsched.R
@@ -18,6 +16,7 @@ import com.alvayonara.outsched.data.source.local.room.ScheduleRoomDatabase
 import com.alvayonara.outsched.ui.dashboard.DashboardActivity
 import com.alvayonara.outsched.utils.ConvertUtils
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class ScheduleReminderReceiver : BroadcastReceiver() {
 
@@ -68,6 +67,24 @@ class ScheduleReminderReceiver : BroadcastReceiver() {
 
         // Notification schedule reminder
         showNotificationSchedule(context, scheduleReminded)
+
+        // Wakelock
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            if (!(context.getSystemService(Context.POWER_SERVICE) as PowerManager).isInteractive) {
+                val wl =
+                    (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
+                        PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                        context.packageName
+                    )
+                wl.acquire(10)
+                try {
+                    TimeUnit.MILLISECONDS.sleep(10)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+                wl.release()
+            }
+        }
     }
 
     private fun showNotificationSchedule(context: Context, scheduleEntity: ScheduleEntity) {
@@ -101,13 +118,13 @@ class ScheduleReminderReceiver : BroadcastReceiver() {
             .setColor(ContextCompat.getColor(context, android.R.color.transparent))
             .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             .setSound(alarmSound)
-            .setStyle(bigText);
+            .setStyle(bigText)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
                 channelName,
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             )
             channel.enableVibration(true)
             channel.vibrationPattern = longArrayOf(1000, 1000, 1000, 1000, 1000)

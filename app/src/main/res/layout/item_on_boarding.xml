@@ -17,17 +17,16 @@
 
         <ImageView
             android:id="@+id/iv_on_boarding"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="400dp"
+            android:layout_height="300dp"
             android:padding="35dp"
-            tools:src="@drawable/ic_jogging_color"
-            android:tint="@android:color/white" />
+            tools:src="@drawable/ic_on_boarding_jogging" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Ready to Travel"
+            tools:text="Title"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
@@ -37,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            tools:text="Find Featured and Premium \nItem From Our Store"
+            tools:text="Description"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="@android:color/white" />
