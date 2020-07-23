@@ -7,7 +7,19 @@ def apiKeyPropertiesFile = rootProject.file("apikey.properties")
 def apiKeyProperties = new Properties()
 apiKeyProperties.load(new FileInputStream(apiKeyPropertiesFile))
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
@@ -22,6 +34,7 @@ android {
         buildConfigField "String", "BASE_DARK_SKY_API", '"https://api.darksky.net/forecast/"'
         resValue "string", "GCP_KEY", apiKeyProperties['GCP_KEY']
         buildConfigField "String", "DARK_SKY_KEY", apiKeyProperties['DARK_SKY_KEY']
+        signingConfig signingConfigs.release
     }
 
     buildTypes {
