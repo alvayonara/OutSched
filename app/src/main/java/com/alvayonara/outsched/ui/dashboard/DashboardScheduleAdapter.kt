@@ -1,6 +1,5 @@
 package com.alvayonara.outsched.ui.dashboard
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
-import com.alvayonara.outsched.ui.location.ExerciseLocationActivity
 import com.alvayonara.outsched.ui.schedule.ScheduleDetailDialogFragment
 import com.alvayonara.outsched.utils.ConvertUtils
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.item_row_dashboard_schedule.view.*

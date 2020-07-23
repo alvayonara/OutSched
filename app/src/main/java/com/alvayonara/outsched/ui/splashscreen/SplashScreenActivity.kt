@@ -1,14 +1,12 @@
 package com.alvayonara.outsched.ui.splashscreen
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import com.alvayonara.outsched.BuildConfig
+import androidx.appcompat.app.AppCompatActivity
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.ui.onboarding.OnBoardingActivity
 import com.alvayonara.outsched.utils.ToolbarConfig
-import kotlinx.android.synthetic.main.activity_splash_screen.*
 
 class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

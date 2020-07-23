@@ -1,12 +1,11 @@
 package com.alvayonara.outsched.ui.settings
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.utils.ToolbarConfig
-import kotlinx.android.synthetic.main.activity_exercise_location.*
 import kotlinx.android.synthetic.main.activity_exercise_location.toolbar
 import kotlinx.android.synthetic.main.activity_settings.*
 

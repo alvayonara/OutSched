@@ -38,7 +38,8 @@ class ScheduleRepository private constructor(
     ): LiveData<List<ScheduleListItem>> =
         remoteDataSource.getWeathersData(latitude, longitude, address, id, requestCode)
 
-    override fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>> = localDataSource.getAllUpcomingSchedules()
+    override fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>> =
+        localDataSource.getAllUpcomingSchedules()
 
     override fun getAllPastSchedules(): LiveData<List<ScheduleEntity>> =
         localDataSource.getAllPastSchedules()

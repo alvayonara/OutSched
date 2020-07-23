@@ -3,12 +3,9 @@
     <color name="colorPrimary">#87BCBF</color>
     <color name="colorPrimaryDark">#87BCBF</color>
     <color name="colorAccent">#87BCBF</color>
-
     <color name="colorGreen">#87BCBF</color>
-
     <color name="colorDotsDark">#4D000000</color>
     <color name="colorDotsWhite">#e6e6e6</color>
-
     <color name="colorBlue">#1976D2</color>
     <color name="colorAccentPink">#FF4081</color>
     <color name="grey_90">#263238</color>

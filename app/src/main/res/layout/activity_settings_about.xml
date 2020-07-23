@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/grey_10"
     android:orientation="vertical">
 
@@ -46,14 +46,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/spacing_middle"
-                    android:paddingTop="@dimen/spacing_middle">
+                    android:paddingTop="@dimen/spacing_middle"
+                    android:paddingBottom="@dimen/spacing_middle">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/spacing_middle"
                         android:layout_marginTop="@dimen/spacing_middle"
+                        android:layout_marginBottom="@dimen/spacing_middle"
                         android:gravity="center_vertical"
                         android:minHeight="@dimen/spacing_xxlarge"
                         android:orientation="horizontal"
@@ -65,10 +65,10 @@
                             android:layout_height="wrap_content" />
 
                         <ImageView
-                            android:tint="@color/colorPrimary"
                             android:layout_width="@dimen/spacing_xxlarge"
                             android:layout_height="@dimen/spacing_xxlarge"
-                            android:src="@drawable/ic_jogging_color" />
+                            android:src="@drawable/ic_jogging_color"
+                            android:tint="@color/colorPrimary" />
 
                         <View
                             android:layout_width="@dimen/spacing_large"
@@ -159,16 +159,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/spacing_middle"
-                    android:paddingTop="@dimen/spacing_middle">
+                    android:paddingTop="@dimen/spacing_middle"
+                    android:paddingBottom="@dimen/spacing_middle">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/spacing_middle"
                         android:layout_marginLeft="@dimen/spacing_mlarge"
-                        android:layout_marginRight="@dimen/spacing_mlarge"
                         android:layout_marginTop="@dimen/spacing_middle"
+                        android:layout_marginRight="@dimen/spacing_mlarge"
+                        android:layout_marginBottom="@dimen/spacing_middle"
                         android:text="Author"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         android:textColor="@color/grey_90"
@@ -245,16 +245,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/spacing_middle"
-                    android:paddingTop="@dimen/spacing_middle">
+                    android:paddingTop="@dimen/spacing_middle"
+                    android:paddingBottom="@dimen/spacing_middle">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/spacing_middle"
                         android:layout_marginLeft="@dimen/spacing_mlarge"
-                        android:layout_marginRight="@dimen/spacing_mlarge"
                         android:layout_marginTop="@dimen/spacing_middle"
+                        android:layout_marginRight="@dimen/spacing_mlarge"
+                        android:layout_marginBottom="@dimen/spacing_middle"
                         android:text="API"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         android:textColor="@color/grey_90"
@@ -262,9 +262,9 @@
 
                     <ImageButton
                         android:id="@+id/iv_dark_sky"
-                        android:layout_gravity="center"
                         android:layout_width="150dp"
                         android:layout_height="60dp"
+                        android:layout_gravity="center"
                         android:background="@drawable/ic_dark_sky"
                         tools:ignore="ContentDescription" />
 

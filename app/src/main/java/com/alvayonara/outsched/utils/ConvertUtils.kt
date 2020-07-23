@@ -67,14 +67,14 @@ object ConvertUtils {
         return convertResult
     }
 
-    fun convertTemperatureRound(temperature: Double?): Int?{
+    fun convertTemperatureRound(temperature: Double?): Int? {
         // assign empty value for convertResult
         var convertResult = 0
 
         try {
             // convert result
             convertResult = DecimalFormat("0.#").format(ceil(temperature!!)).toInt()
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
 

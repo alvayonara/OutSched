@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 
 object ToolbarConfig {
 
-    fun setTransparent(act: Activity){
+    fun setTransparent(act: Activity) {
         act.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         act.window.statusBarColor = Color.TRANSPARENT
     }

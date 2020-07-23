@@ -27,8 +27,8 @@
         android:id="@+id/lyt_empty_upcoming_schedule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="invisible">
@@ -52,9 +52,9 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:gravity="center"
             android:lineSpacingExtra="5dp"
             android:text="There is no upcoming schedule yet.\nTap button below to add new schedule"
-            android:gravity="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
             android:textColor="@android:color/black"
             tools:ignore="HardcodedText" />

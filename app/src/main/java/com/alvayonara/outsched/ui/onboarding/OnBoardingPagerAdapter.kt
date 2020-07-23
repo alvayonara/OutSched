@@ -39,7 +39,8 @@ class OnBoardingPagerAdapter(private val context: Context) : PagerAdapter() {
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layoutInflater =
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         val view = layoutInflater.inflate(R.layout.item_on_boarding, container, false) as View
         view.iv_on_boarding.setImageResource(onBoardingImageViews[position])

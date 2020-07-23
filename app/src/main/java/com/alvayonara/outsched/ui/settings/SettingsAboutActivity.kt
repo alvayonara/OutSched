@@ -32,7 +32,10 @@ class SettingsAboutActivity : AppCompatActivity() {
     private fun initView() {
         lyt_author.setOnClickListener {
             val intent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/alva-yonara-puramandya/"))
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.linkedin.com/in/alva-yonara-puramandya/")
+                )
             startActivity(intent)
         }
 

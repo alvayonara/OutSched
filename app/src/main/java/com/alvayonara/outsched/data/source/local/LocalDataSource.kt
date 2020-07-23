@@ -1,11 +1,8 @@
 package com.alvayonara.outsched.data.source.local
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
-import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem
 import com.alvayonara.outsched.data.source.local.room.ScheduleDao
-import com.alvayonara.outsched.utils.GroupScheduleUtils.consolidateSchedule
 
 class LocalDataSource private constructor(private val mScheduleDao: ScheduleDao) {
 
@@ -19,7 +16,8 @@ class LocalDataSource private constructor(private val mScheduleDao: ScheduleDao)
             }
     }
 
-    fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>> = mScheduleDao.getAllUpcomingSchedules()
+    fun getAllUpcomingSchedules(): LiveData<List<ScheduleEntity>> =
+        mScheduleDao.getAllUpcomingSchedules()
 
     fun getAllPastSchedules(): LiveData<List<ScheduleEntity>> = mScheduleDao.getAllPastSchedules()
 
@@ -29,5 +27,6 @@ class LocalDataSource private constructor(private val mScheduleDao: ScheduleDao)
 
     fun deleteSchedule(scheduleEntity: ScheduleEntity) = mScheduleDao.deleteSchedule(scheduleEntity)
 
-    fun checkSchedule(time: Long, latitude: String, longitude: String): Boolean = mScheduleDao.checkSchedules(time, latitude, longitude)
+    fun checkSchedule(time: Long, latitude: String, longitude: String): Boolean =
+        mScheduleDao.checkSchedules(time, latitude, longitude)
 }

@@ -12,9 +12,9 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
+    app:cardCornerRadius="4dp"
     app:cardElevation="2dp"
-    app:cardPreventCornerOverlap="false"
-    app:cardCornerRadius="4dp">
+    app:cardPreventCornerOverlap="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -51,8 +51,8 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:singleLine="true"
-                app:fontFamily="sans-serif-medium"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                app:fontFamily="sans-serif-medium"
                 tools:text="Weather" />
 
             <TextView
