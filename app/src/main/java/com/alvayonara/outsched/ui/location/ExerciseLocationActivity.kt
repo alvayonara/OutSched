@@ -1,32 +1,29 @@
 package com.alvayonara.outsched.ui.location
 
 import android.Manifest
-import android.content.DialogInterface
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
-import android.os.AsyncTask
-import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
-import androidx.core.content.ContextCompat
 import com.alvayonara.outsched.R
+import com.alvayonara.outsched.core.utils.Helper.showMaterialDialog
+import com.alvayonara.outsched.core.utils.ToolbarConfig
+import com.alvayonara.outsched.core.utils.invisible
+import com.alvayonara.outsched.core.utils.visible
+import com.alvayonara.outsched.databinding.ActivityExerciseLocationBinding
+import com.alvayonara.outsched.ui.base.BaseActivity
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_ADDRESS
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_LATITUDE
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_LONGITUDE
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_REQUEST_CODE
-import com.alvayonara.outsched.utils.PermissionUtils.PermissionDeniedDialog.Companion.newInstance
-import com.alvayonara.outsched.utils.PermissionUtils.isPermissionGranted
-import com.alvayonara.outsched.utils.PermissionUtils.requestPermission
-import com.alvayonara.outsched.utils.ToolbarConfig
-import com.alvayonara.outsched.utils.invisible
-import com.alvayonara.outsched.utils.visible
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -37,39 +34,50 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_exercise_location.*
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.Executors
 
-class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
+
+class ExerciseLocationActivity : BaseActivity<ActivityExerciseLocationBinding>(),
+    OnMapReadyCallback,
     OnRequestPermissionsResultCallback {
 
-    private var permissionDenied = false
     private lateinit var mMap: GoogleMap
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private var id: Int? = 0
-    private var requestCode: Int? = 0
+    private var id = 0
+    private var requestCode = 0
 
     companion object {
-        /**
-         * Request code for location permission request.
-         *
-         * @see .onRequestPermissionsResult
-         */
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
-
         const val EXTRA_ID = "extra_id"
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_exercise_location)
+    override val bindingInflater: (LayoutInflater) -> ActivityExerciseLocationBinding
+        get() = ActivityExerciseLocationBinding::inflate
 
+    override fun setup() {
         initToolbar()
+        initData()
+        initMapLocation()
+    }
 
+    private fun initToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Set Exercise Location"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        ToolbarConfig.setSystemBarColor(this, android.R.color.white)
+        ToolbarConfig.setSystemBarLight(this)
+    }
+
+    private fun initData() {
         // Intent from change schedule (id & request code)
-        id = intent.extras?.getInt(EXTRA_ID, 0)
-        requestCode = intent.extras?.getInt(EXTRA_REQUEST_CODE, 0)
+        intent.extras?.let {
+            id = it.getInt(EXTRA_ID, 0)
+            requestCode = it.getInt(EXTRA_REQUEST_CODE, 0)
+        }
+    }
 
+    private fun initMapLocation() {
         // Initialize map fragment
         mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -78,18 +86,35 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
-    private fun initToolbar() {
-        setSupportActionBar(toolbar)
-        supportActionBar?.title = "Set Exercise Location"
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        ToolbarConfig.setSystemBarColor(this, android.R.color.white)
-        ToolbarConfig.setSystemBarLight(this)
-    }
-
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        enableMyLocation()
+        requestPermission()
+    }
+
+    private fun requestPermission() {
+        requestPermissions(listOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ),
+            action = {
+                enableMyLocation()
+            }, actionDeny = { showDenyPermission() })
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun enableMyLocation() {
+        mMap.isMyLocationEnabled = true
+        initViewMyLocation()
+
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val currentLatLng =
+                        LatLng(location.latitude, location.longitude)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 18f))
+                }
+            }
+
         initCameraIdle()
     }
 
@@ -99,57 +124,27 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
                 Integer.parseInt("2")
             )
 
-        val rlp = locationButton.layoutParams as RelativeLayout.LayoutParams
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
-        rlp.setMargins(0, 0, 30, 600)
-    }
-
-    /**
-     * Enables the My Location layer if the fine location permission has been granted.
-     */
-    private fun enableMyLocation() {
-        if (!::mMap.isInitialized) return
-        // [START maps_check_location_permission]
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            mMap.isMyLocationEnabled = true
-            initViewMyLocation()
-
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    if (location != null) {
-                        val currentLatLng =
-                            LatLng(location.latitude, location.longitude)
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 18f))
-                    }
-                }
-        } else {
-            // Permission to access the location is missing. Show rationale and request permission
-            requestPermission(
-                this, LOCATION_PERMISSION_REQUEST_CODE,
-                Manifest.permission.ACCESS_FINE_LOCATION, true
-            )
+        (locationButton.layoutParams as RelativeLayout.LayoutParams).apply {
+            addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
+            addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+            setMargins(0, 0, 30, 600)
         }
-        // [END maps_check_location_permission]
     }
 
     private fun initCameraIdle() {
         mMap.setOnCameraIdleListener {
             // Get center latitude and longitude
             val center = mMap.cameraPosition.target as LatLng
+            Executors.newSingleThreadExecutor().execute {
+                val mainHandler = Handler(Looper.getMainLooper())
 
-            // Geocoder using AsyncTask
-            AsyncTask.execute {
-                run {
-                    // Pass data center of latitude and longitude to get address using geocode class
-                    val address = getAddressFromLatLong(center)
+                // Pass data center of latitude and longitude to get address using geocode class
+                val address = getAddressFromLatLong(center)
 
-                    runOnUiThread {
-                        // Init view in UI thread
-                        initViewAddress(address, center)
-                    }
+                //sync calculations
+                mainHandler.post {
+                    // Init view in UI thread
+                    initViewAddress(address, center)
                 }
             }
         }
@@ -157,15 +152,16 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private fun initViewAddress(address: String?, center: LatLng) {
         if (address != null) {
-            tv_address.text = address
-            address_card_view.visible()
-            btn_save_location.setOnClickListener {
-                val builder = AlertDialog.Builder(this@ExerciseLocationActivity)
-
-                builder.setTitle("Confirmation")
-                builder.setMessage("Do you want to set this location?")
-                builder.setPositiveButton("Yes") { _, _ ->
-                    run {
+            binding.tvAddress.text = address
+            binding.addressCardView.visible()
+            binding.btnSaveLocation.setOnClickListener {
+                showMaterialDialog(
+                    context = this,
+                    title = R.string.dialog_confirmation,
+                    message = R.string.location_dialog,
+                    positiveText = R.string.dialog_yes,
+                    negativeText = R.string.dialog_no,
+                    actionPositive = {
                         val intent = Intent(this, SelectScheduleActivity::class.java).apply {
                             putExtra(EXTRA_ADDRESS, address)
                             putExtra(EXTRA_LATITUDE, center.latitude.toString())
@@ -174,26 +170,19 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
                             putExtra(EXTRA_REQUEST_CODE, requestCode)
                         }
                         startActivity(intent)
-                    }
-                }
-
-                builder.setNegativeButton("No") { dialog: DialogInterface, _ ->
-                    dialog.cancel()
-                }
-
-                builder.show()
+                    },
+                    actionNegative = { }
+                )
             }
         } else {
             // When address return null
-            address_card_view.invisible()
+            binding.addressCardView.invisible()
         }
     }
 
     private fun getAddressFromLatLong(center: LatLng): String? {
         val geocode = Geocoder(this, Locale.getDefault())
-        val address: String?
-
-        address = try {
+        return try {
             val addressList =
                 geocode.getFromLocation(center.latitude, center.longitude, 1)
             if (addressList != null && addressList.size > 0) {
@@ -205,54 +194,6 @@ class ExerciseLocationActivity : AppCompatActivity(), OnMapReadyCallback,
             e.printStackTrace()
             null
         }
-
-        return address
-    }
-
-    // [START maps_check_location_permission_result]
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
-            return
-        }
-        if (isPermissionGranted(
-                permissions,
-                grantResults,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        ) {
-            // Enable the my location layer if the permission has been granted.
-            enableMyLocation()
-
-            // Init idle map camera if the permission has been granted.
-            initCameraIdle()
-        } else {
-            // Permission was denied. Display an error message
-            // [START_EXCLUDE]
-            // Display the missing permission error dialog when the fragments resume.
-            permissionDenied = true
-            // [END_EXCLUDE]
-        }
-    }
-
-    // [END maps_check_location_permission_result]
-    override fun onResumeFragments() {
-        super.onResumeFragments()
-        if (permissionDenied) {
-            // Permission was not granted, display error dialog.
-            showMissingPermissionError()
-            permissionDenied = false
-        }
-    }
-
-    /**
-     * Displays a dialog with error message explaining that the location permission is missing.
-     */
-    private fun showMissingPermissionError() {
-        newInstance(true).show(supportFragmentManager, "dialog")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

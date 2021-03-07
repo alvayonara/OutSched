@@ -1,45 +1,19 @@
 package com.alvayonara.outsched.ui.schedule
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.ViewModel
-import com.alvayonara.outsched.data.source.ScheduleRepository
-import com.alvayonara.outsched.data.source.local.entity.item.ScheduleListItem
+import com.alvayonara.outsched.core.domain.usecase.ScheduleUseCase
+import javax.inject.Inject
 
-class SelectScheduleViewModel(private val scheduleRepository: ScheduleRepository) : ViewModel() {
+class SelectScheduleViewModel @Inject constructor(private val scheduleUseCase: ScheduleUseCase) : ViewModel() {
 
-    private val address = MutableLiveData<String>()
-    private val latitude = MutableLiveData<String>()
-    private val longitude = MutableLiveData<String>()
-    private val id = MutableLiveData<Int>()
-    private val requestCode = MutableLiveData<Int>()
-
-    fun setAddressSchedule(address: String) {
-        this.address.value = address
-    }
-
-    fun setLatitudeSchedule(latitude: String) {
-        this.latitude.value = latitude
-    }
-
-    fun setLongitudeSchedule(longitude: String) {
-        this.longitude.value = longitude
-    }
-
-    fun setIdSchedule(id: Int) {
-        this.id.value = id
-    }
-
-    fun setRequestCodeSchedule(requestCode: Int) {
-        this.requestCode.value = requestCode
-    }
-
-    fun getWeathers(): LiveData<List<ScheduleListItem>> =
-        scheduleRepository.getWeathersData(
-            latitude.value!!,
-            longitude.value!!,
-            address.value!!,
-            id.value!!,
-            requestCode.value!!
-        )
+    fun getWeathers(
+        latitude: String,
+        longitude: String,
+        address: String,
+        id: Int,
+        requestCode: Int
+    ) = LiveDataReactiveStreams.fromPublisher(scheduleUseCase.getWeathersData(
+        latitude, longitude, address, id, requestCode
+    ))
 }

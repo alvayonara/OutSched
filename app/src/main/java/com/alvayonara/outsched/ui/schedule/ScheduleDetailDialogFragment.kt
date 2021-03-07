@@ -1,162 +1,159 @@
 package com.alvayonara.outsched.ui.schedule
 
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import com.alvayonara.outsched.MyApplication
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
-import com.alvayonara.outsched.receiver.ScheduleReminderReceiver
+import com.alvayonara.outsched.core.domain.model.Schedule
+import com.alvayonara.outsched.core.receiver.ScheduleReminderReceiver
+import com.alvayonara.outsched.core.ui.ViewModelFactory
+import com.alvayonara.outsched.core.utils.ConvertUtils
+import com.alvayonara.outsched.core.utils.ConvertUtils.convertTemperatureRound
+import com.alvayonara.outsched.core.utils.ConvertUtils.dateTimeConvert
+import com.alvayonara.outsched.core.utils.DateFormat.Companion.FORMAT_DATE_WITH_DAY
+import com.alvayonara.outsched.core.utils.DateFormat.Companion.FORMAT_ONLY_TIME
+import com.alvayonara.outsched.core.utils.Helper
+import com.alvayonara.outsched.core.utils.Helper.showMaterialDialog
+import com.alvayonara.outsched.core.utils.gone
+import com.alvayonara.outsched.core.utils.visible
+import com.alvayonara.outsched.databinding.DialogSelectScheduleBinding
+import com.alvayonara.outsched.ui.base.BaseDialogFragment
 import com.alvayonara.outsched.ui.dashboard.DashboardActivity
 import com.alvayonara.outsched.ui.location.ExerciseLocationActivity
 import com.alvayonara.outsched.ui.location.ExerciseLocationActivity.Companion.EXTRA_ID
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_REQUEST_CODE
-import com.alvayonara.outsched.utils.ConvertUtils
-import com.alvayonara.outsched.utils.gone
-import com.alvayonara.outsched.utils.visible
-import com.alvayonara.outsched.viewmodel.ViewModelFactory
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.dialog_select_schedule.*
+import javax.inject.Inject
 
-class ScheduleDetailDialogFragment : DialogFragment() {
+class ScheduleDetailDialogFragment : BaseDialogFragment<DialogSelectScheduleBinding>() {
 
-    private lateinit var scheduleDetailViewModel: ScheduleDetailViewModel
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val scheduleDetailViewModel: ScheduleDetailViewModel by viewModels {
+        factory
+    }
+
     private lateinit var mapFragment: SupportMapFragment
-
     private lateinit var scheduleReminderReceiver: ScheduleReminderReceiver
 
     companion object {
         const val EXTRA_SCHEDULE_DETAIL = "extra_schedule_detail"
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.dialog_select_schedule, container, false)
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> DialogSelectScheduleBinding
+        get() = DialogSelectScheduleBinding::inflate
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun injector() {
+        (requireActivity().application as MyApplication).appComponent.inject(this)
+    }
 
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        scheduleDetailViewModel =
-            ViewModelProvider(requireActivity(), factory)[ScheduleDetailViewModel::class.java]
-
+    override fun setup() {
         if (arguments != null) {
-            val schedule = arguments!!.getParcelable<ScheduleEntity>(EXTRA_SCHEDULE_DETAIL)
-            initView(schedule)
+            initView(requireArguments().getParcelable(EXTRA_SCHEDULE_DETAIL))
         }
-
         scheduleReminderReceiver = ScheduleReminderReceiver()
     }
 
-    private fun initView(schedule: ScheduleEntity?) {
+    private fun initView(schedule: Schedule?) {
         mapFragment =
-            (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.map_detail) as SupportMapFragment
+            childFragmentManager.findFragmentById(R.id.map_detail) as SupportMapFragment
 
-        mapFragment.getMapAsync { googleMap ->
-            googleMap.uiSettings.setAllGesturesEnabled(false)
-            val savedLatLng = LatLng(
-                schedule!!.latitude!!.toDouble(),
-                schedule.longitude!!.toDouble()
+        schedule?.let {
+            Log.d("schedd", schedule.toString())
+            mapFragment.getMapAsync { googleMap ->
+                googleMap.uiSettings.setAllGesturesEnabled(false)
+                val savedLatLng = LatLng(
+                    it.latitude.toDouble(),
+                    it.longitude.toDouble()
+                )
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(savedLatLng, 18f))
+                googleMap.addMarker(MarkerOptions().position(savedLatLng))
+            }
+
+            when {
+                it.icon.startsWith("clear") -> binding.ivWeather.setImageResource(R.drawable.ic_clear)
+                it.icon.startsWith("cloudy") -> binding.ivWeather.setImageResource(R.drawable.ic_clouds)
+                it.icon.startsWith("partly-cloudy") -> binding.ivWeather.setImageResource(R.drawable.ic_partly_cloudy)
+                it.icon.contains("rain") -> binding.ivWeather.setImageResource(R.drawable.ic_rain)
+            }
+            binding.tvWeather.text = it.summary
+            binding.tvDate.text = it.time.dateTimeConvert(FORMAT_DATE_WITH_DAY)
+            binding.tvHour.text = it.time.dateTimeConvert(FORMAT_ONLY_TIME)
+            binding.tvTemperature.text = getString(
+                R.string.temperature,
+                it.temperature.convertTemperatureRound()
             )
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(savedLatLng, 18f))
-            googleMap.addMarker(MarkerOptions().position(savedLatLng))
-        }
 
-        when {
-            schedule!!.icon!!.startsWith("clear") -> {
-                iv_weather.setImageResource(R.drawable.ic_clear)
-            }
-            schedule.icon!!.startsWith("cloudy") -> {
-                iv_weather.setImageResource(R.drawable.ic_clouds)
-            }
-            schedule.icon!!.startsWith("partly-cloudy") -> {
-                iv_weather.setImageResource(R.drawable.ic_partly_cloudy)
-            }
-            schedule.icon!!.contains("rain") -> {
-                iv_weather.setImageResource(R.drawable.ic_rain)
-            }
+            checkSchedule(it)
         }
-        tv_weather.text = schedule!!.summary
-        tv_date.text = ConvertUtils.convertTimeToDate(schedule.time)
-        tv_hour.text = ConvertUtils.convertTimeToHour(schedule.time)
-        tv_temperature.text = getString(
-            R.string.temperature,
-            ConvertUtils.convertTemperatureRound(schedule.temperature)
-                .toString()
-        )
-
-        checkSchedule(schedule)
     }
 
-    private fun checkSchedule(schedule: ScheduleEntity) {
+    private fun checkSchedule(schedule: Schedule) {
         scheduleDetailViewModel.checkScheduleData(
-            schedule.time!!,
-            schedule.latitude!!, schedule.longitude!!
-        ).observe(viewLifecycleOwner, Observer { result ->
-
-            if (result) {
-
-                if (schedule.time!! * 1000 < System.currentTimeMillis()) {
+            schedule.time,
+            schedule.latitude,
+            schedule.longitude
+        ).observe(viewLifecycleOwner, { result ->
+            if (result > 0) {
+                if (schedule.time * 1000 < System.currentTimeMillis()) {
                     btn_change.gone()
                 }
 
                 // Set layout (delete or change schedule)
-                lyt_dialog_saved_schedule.visible()
+                binding.lytDialogSavedSchedule.visible()
 
                 // Change schedule button
-                btn_change.setOnClickListener {
-                    val builder = AlertDialog.Builder(requireActivity())
-
-                    builder.setTitle("Confirmation")
-                    builder.setMessage("Do you want to change this schedule?")
-                    builder.setPositiveButton("Yes") { _, _ ->
-                        run {
+                binding.btnChange.setOnClickListener {
+                    showMaterialDialog(
+                        context = requireActivity(),
+                        title = R.string.dialog_confirmation,
+                        message = R.string.change_schedule_dialog,
+                        positiveText = R.string.dialog_yes,
+                        negativeText = R.string.dialog_no,
+                        actionPositive = {
                             dismiss()
 
-                            val intent =
-                                Intent(
+                            val intent = Intent(
                                     requireActivity(),
                                     ExerciseLocationActivity::class.java
                                 ).apply {
                                     putExtra(EXTRA_ID, schedule.id)
                                     putExtra(EXTRA_REQUEST_CODE, schedule.requestCode)
                                 }
-
                             startActivity(intent)
-                        }
-                    }
-
-                    builder.setNegativeButton("No") { dialog: DialogInterface, _ ->
-                        dialog.cancel()
-                    }
-
-                    builder.show()
+                        },
+                        actionNegative = { dismiss() }
+                    )
                 }
 
                 // Delete schedule button
-                btn_delete.setOnClickListener {
-                    val builder = AlertDialog.Builder(requireActivity())
+                binding.btnDelete.setOnClickListener {
+                    showMaterialDialog(
+                        context = requireActivity(),
+                        title = R.string.dialog_confirmation,
+                        message = R.string.delete_schedule_dialog,
+                        positiveText = R.string.dialog_yes,
+                        negativeText = R.string.dialog_no,
+                        actionPositive = {
+                            dismiss()
 
-                    builder.setTitle("Confirmation")
-                    builder.setMessage("Do you want to delete this schedule?")
-                    builder.setPositiveButton("Yes") { _, _ ->
-                        run {
                             // Cancel alarm
                             scheduleReminderReceiver.cancelAlarm(
                                 requireActivity(),
@@ -164,35 +161,30 @@ class ScheduleDetailDialogFragment : DialogFragment() {
                             )
 
                             scheduleDetailViewModel.delete(schedule)
-                            dismiss()
 
                             Toast.makeText(
                                 requireActivity(),
                                 "Schedule successfully deleted",
                                 Toast.LENGTH_SHORT
                             ).show()
-                        }
-                    }
-
-                    builder.setNegativeButton("No") { dialog: DialogInterface, _ ->
-                        dialog.cancel()
-                    }
-
-                    builder.show()
+                        },
+                        actionNegative = { dismiss() }
+                    )
                 }
             } else {
                 // Set layout (cancel or save schedule)
-                lyt_dialog_select_schedule.visible()
+                binding.lytDialogSelectSchedule.visible()
 
                 // Save new schedule button
-                btn_save.setOnClickListener {
+                binding.btnSave.setOnClickListener {
+                    dismiss()
+
                     // If request code is 0 then the schedule are not saved yet on db
                     if (schedule.requestCode == 0) {
                         // Set new request code
                         schedule.requestCode = System.currentTimeMillis().toInt()
                     }
 
-                    // Insert schedule to database (new data)
                     scheduleDetailViewModel.insert(schedule)
 
                     // Set alarm
@@ -209,25 +201,16 @@ class ScheduleDetailDialogFragment : DialogFragment() {
                     ).show()
                 }
 
-                btn_cancel.setOnClickListener {
-                    dismiss()
-                }
+                binding.btnCancel.setOnClickListener { dismiss() }
             }
         })
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.window
-            ?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        return dialog
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            .remove(mapFragment).commitAllowingStateLoss()
+        return super.onCreateDialog(savedInstanceState).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            window
+                ?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
     }
 }

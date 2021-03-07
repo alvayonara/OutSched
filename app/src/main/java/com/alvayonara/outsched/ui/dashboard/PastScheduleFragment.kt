@@ -1,66 +1,74 @@
 package com.alvayonara.outsched.ui.dashboard
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alvayonara.outsched.MyApplication
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.utils.gone
-import com.alvayonara.outsched.utils.visible
-import com.alvayonara.outsched.viewmodel.ViewModelFactory
+import com.alvayonara.outsched.core.ui.DashboardScheduleAdapter
+import com.alvayonara.outsched.core.ui.ViewModelFactory
+import com.alvayonara.outsched.core.utils.gone
+import com.alvayonara.outsched.core.utils.visible
+import com.alvayonara.outsched.databinding.FragmentPastScheduleBinding
+import com.alvayonara.outsched.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_past_schedule.*
+import javax.inject.Inject
 
-class PastScheduleFragment : Fragment() {
+class PastScheduleFragment : BaseFragment<FragmentPastScheduleBinding>() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_past_schedule, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        dashboardViewModel =
-            ViewModelProvider(requireActivity(), factory)[DashboardViewModel::class.java]
-
-        getPastSchedule()
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val dashboardViewModel: DashboardViewModel by viewModels {
+        factory
     }
 
-    private fun getPastSchedule() {
-        val dashboardScheduleAdapter = DashboardScheduleAdapter()
+    private lateinit var dashboardScheduleAdapter: DashboardScheduleAdapter
 
-        progress_bar_past_schedule.visible()
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as MyApplication).appComponent.inject(this)
+    }
 
-        dashboardViewModel.getPastSchedules()
-            .observe(viewLifecycleOwner, Observer { schedules ->
-                progress_bar_past_schedule.gone()
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPastScheduleBinding
+        get() = FragmentPastScheduleBinding::inflate
 
-                if (schedules.isNotEmpty()) {
-                    dashboardScheduleAdapter.setSchedules(schedules)
-                    dashboardScheduleAdapter.notifyDataSetChanged()
-                } else {
-                    dashboardScheduleAdapter.setSchedules(schedules)
-                    dashboardScheduleAdapter.notifyDataSetChanged()
-                    lyt_empty_past_schedule.visible()
-                }
-            })
+    override fun setup() {
+        if (activity != null){
+            initView()
+            getPastSchedule()
+        }
+    }
 
-        with(rv_past_schedule) {
+    private fun initView() {
+        dashboardScheduleAdapter = DashboardScheduleAdapter()
+        with(binding.rvPastSchedule) {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = dashboardScheduleAdapter
         }
     }
 
+    private fun getPastSchedule() {
+        binding.progressBarPastSchedule.visible()
+        dashboardViewModel.getPastSchedules
+            .observe(viewLifecycleOwner, { schedules ->
+                binding.progressBarPastSchedule.gone()
+
+                if (schedules.isNotEmpty()) {
+                    dashboardScheduleAdapter.setSchedules(schedules)
+                } else {
+                    dashboardScheduleAdapter.setSchedules(schedules)
+                    binding.lytEmptyPastSchedule.visible()
+                }
+            })
+    }
+
     override fun onResume() {
         super.onResume()
-
         getPastSchedule()
     }
 }
