@@ -1,15 +1,13 @@
 package com.alvayonara.outsched.ui.dashboard
 
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.ViewModel
-import com.alvayonara.outsched.data.source.ScheduleRepository
-import com.alvayonara.outsched.data.source.local.entity.ScheduleEntity
+import com.alvayonara.outsched.core.domain.usecase.ScheduleUseCase
+import javax.inject.Inject
 
-class DashboardViewModel(private val scheduleRepository: ScheduleRepository) : ViewModel() {
+class DashboardViewModel @Inject constructor(scheduleUseCase: ScheduleUseCase) : ViewModel() {
 
-    fun getUpcomingSchedules(): LiveData<List<ScheduleEntity>> =
-        scheduleRepository.getAllUpcomingSchedules()
+    val getUpcomingSchedules = LiveDataReactiveStreams.fromPublisher(scheduleUseCase.getAllUpcomingSchedules())
 
-    fun getPastSchedules(): LiveData<List<ScheduleEntity>> =
-        scheduleRepository.getAllPastSchedules()
+    val getPastSchedules = LiveDataReactiveStreams.fromPublisher(scheduleUseCase.getAllPastSchedules())
 }

@@ -1,22 +1,21 @@
 package com.alvayonara.outsched.ui.settings
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.utils.ToolbarConfig
-import kotlinx.android.synthetic.main.activity_exercise_location.toolbar
-import kotlinx.android.synthetic.main.activity_settings_about.*
+import com.alvayonara.outsched.core.utils.Helper.intentUri
+import com.alvayonara.outsched.core.utils.ToolbarConfig
+import com.alvayonara.outsched.databinding.ActivitySettingsAboutBinding
+import com.alvayonara.outsched.ui.base.BaseActivity
+import kotlinx.android.synthetic.main.activity_exercise_location.*
 
 
-class SettingsAboutActivity : AppCompatActivity() {
+class SettingsAboutActivity : BaseActivity<ActivitySettingsAboutBinding>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings_about)
+    override val bindingInflater: (LayoutInflater) -> ActivitySettingsAboutBinding
+        get() = ActivitySettingsAboutBinding::inflate
 
+    override fun setup() {
         initToolbar()
         initView()
     }
@@ -25,24 +24,16 @@ class SettingsAboutActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "About Apps"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         ToolbarConfig.setSystemBarColor(this, R.color.colorGreen)
     }
 
     private fun initView() {
-        lyt_author.setOnClickListener {
-            val intent =
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://www.linkedin.com/in/alva-yonara-puramandya/")
-                )
-            startActivity(intent)
+        binding.lytAuthor.setOnClickListener {
+            intentUri(this, "https://www.linkedin.com/in/alva-yonara-puramandya/")
         }
 
-        iv_dark_sky.setOnClickListener {
-            val intent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://darksky.net/poweredby/"))
-            startActivity(intent)
+        binding.ivDarkSky.setOnClickListener {
+            intentUri(this, "https://darksky.net/poweredby/")
         }
     }
 

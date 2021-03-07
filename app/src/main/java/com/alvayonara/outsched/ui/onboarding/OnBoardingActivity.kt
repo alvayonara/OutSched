@@ -3,6 +3,7 @@ package com.alvayonara.outsched.ui.onboarding
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -10,59 +11,57 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.alvayonara.outsched.R
+import com.alvayonara.outsched.core.ui.OnBoardingPagerAdapter
 import com.alvayonara.outsched.ui.dashboard.DashboardActivity
-import com.alvayonara.outsched.utils.Preferences
-import com.alvayonara.outsched.utils.Preferences.Companion.ON_BOARDING
-import com.alvayonara.outsched.utils.ToolbarConfig
-import com.alvayonara.outsched.utils.gone
-import com.alvayonara.outsched.utils.visible
+import com.alvayonara.outsched.core.utils.Preferences
+import com.alvayonara.outsched.core.utils.Preferences.Companion.ON_BOARDING
+import com.alvayonara.outsched.core.utils.ToolbarConfig
+import com.alvayonara.outsched.core.utils.gone
+import com.alvayonara.outsched.core.utils.visible
+import com.alvayonara.outsched.databinding.ActivityOnBoardingBinding
+import com.alvayonara.outsched.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_on_boarding.*
 
-class OnBoardingActivity : AppCompatActivity() {
+class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>() {
 
     private lateinit var preferences: Preferences
-
     companion object {
         private const val TOTAL_STEPPER = 4
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_on_boarding)
+    override val bindingInflater: (LayoutInflater) -> ActivityOnBoardingBinding
+        get() = ActivityOnBoardingBinding::inflate
 
-        ToolbarConfig.setSystemBarColor(this, R.color.colorGreen)
-
+    override fun setup() {
+        ToolbarConfig.setSystemBarColor(this, android.R.color.white)
+        ToolbarConfig.setSystemBarLight(this)
         preferences = Preferences(this)
-
         initView()
     }
 
     private fun initView() {
         // Init dots position 0
         initDots(0)
-
         checkOnBoardingStatus()
 
         val pagerAdapter = OnBoardingPagerAdapter(this)
-        view_pager_on_boarding.adapter = pagerAdapter
-        view_pager_on_boarding.addOnPageChangeListener(viewPagerPageChangeListener)
+        binding.viewPagerOnBoarding.adapter = pagerAdapter
+        binding.viewPagerOnBoarding.addOnPageChangeListener(viewPagerPageChangeListener)
 
-        btn_get_started.gone()
-        btn_get_started.setOnClickListener {
+        binding.btnGetStarted.gone()
+        binding.btnGetStarted.setOnClickListener {
             preferences.setValues(ON_BOARDING, "1")
             toDashboardActivity()
         }
 
-        btn_skip.setOnClickListener {
+        binding.btnSkip.setOnClickListener {
             preferences.setValues(ON_BOARDING, "1")
             toDashboardActivity()
         }
     }
 
     private fun checkOnBoardingStatus() {
-        if (preferences.getValues(ON_BOARDING).equals("1")) {
-            toDashboardActivity()
-        }
+        if (preferences.getValues(ON_BOARDING).equals("1")) toDashboardActivity()
     }
 
     private fun toDashboardActivity() {
@@ -72,7 +71,7 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun initDots(index: Int) {
-        ll_dots.removeAllViews()
+        binding.llDots.removeAllViews()
 
         val dots =
             arrayOfNulls<ImageView>(TOTAL_STEPPER)
@@ -91,7 +90,7 @@ class OnBoardingActivity : AppCompatActivity() {
                 PorterDuff.Mode.SRC_IN
             )
 
-            ll_dots.addView(dots[i])
+            binding.llDots.addView(dots[i])
         }
 
         if (dots.isNotEmpty()) {
@@ -106,19 +105,12 @@ class OnBoardingActivity : AppCompatActivity() {
     private var viewPagerPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             initDots(position)
-
-            // Position start from 0
-            // 0 -> dot 1
-            // 1 -> dot 2
-            // 2 -> dot 3
-            // 3 -> last dot (dot 4)
-            // set visibility based on position
             if (position == 3) {
                 // Set get started button to visible
-                btn_get_started.visible()
+                binding.btnGetStarted.visible()
             } else {
                 // Hide/set to gone get started button
-                btn_get_started.gone()
+                binding.btnGetStarted.gone()
             }
         }
 

@@ -1,66 +1,74 @@
 package com.alvayonara.outsched.ui.dashboard
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alvayonara.outsched.MyApplication
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.utils.gone
-import com.alvayonara.outsched.utils.visible
-import com.alvayonara.outsched.viewmodel.ViewModelFactory
+import com.alvayonara.outsched.core.ui.DashboardScheduleAdapter
+import com.alvayonara.outsched.core.ui.ViewModelFactory
+import com.alvayonara.outsched.core.utils.gone
+import com.alvayonara.outsched.core.utils.visible
+import com.alvayonara.outsched.databinding.FragmentUpcomingScheduleBinding
+import com.alvayonara.outsched.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_upcoming_schedule.*
+import javax.inject.Inject
 
-class UpcomingScheduleFragment : Fragment() {
+class UpcomingScheduleFragment : BaseFragment<FragmentUpcomingScheduleBinding>() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_upcoming_schedule, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        dashboardViewModel =
-            ViewModelProvider(requireActivity(), factory)[DashboardViewModel::class.java]
-
-        getUpcomingSchedule()
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val dashboardViewModel: DashboardViewModel by viewModels {
+        factory
     }
 
-    private fun getUpcomingSchedule() {
-        val dashboardScheduleAdapter = DashboardScheduleAdapter()
+    private lateinit var dashboardScheduleAdapter: DashboardScheduleAdapter
 
-        progress_bar_upcoming_schedule.visible()
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as MyApplication).appComponent.inject(this)
+    }
 
-        dashboardViewModel.getUpcomingSchedules()
-            .observe(viewLifecycleOwner, Observer { schedules ->
-                progress_bar_upcoming_schedule.gone()
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentUpcomingScheduleBinding
+        get() = FragmentUpcomingScheduleBinding::inflate
 
-                if (schedules.isNotEmpty()) {
-                    dashboardScheduleAdapter.setSchedules(schedules)
-                    dashboardScheduleAdapter.notifyDataSetChanged()
-                } else {
-                    dashboardScheduleAdapter.setSchedules(schedules)
-                    dashboardScheduleAdapter.notifyDataSetChanged()
-                    lyt_empty_upcoming_schedule.visible()
-                }
-            })
+    override fun setup() {
+        if (activity != null) {
+            initView()
+            getUpcomingSchedule()
+        }
+    }
 
-        with(rv_upcoming_schedule) {
+    private fun initView() {
+        dashboardScheduleAdapter = DashboardScheduleAdapter()
+        with(binding.rvUpcomingSchedule) {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = dashboardScheduleAdapter
         }
     }
 
+    private fun getUpcomingSchedule() {
+        binding.progressBarUpcomingSchedule.visible()
+        dashboardViewModel.getUpcomingSchedules
+            .observe(viewLifecycleOwner, { schedules ->
+                binding.progressBarUpcomingSchedule.gone()
+
+                if (schedules.isNotEmpty()) {
+                    dashboardScheduleAdapter.setSchedules(schedules)
+                } else {
+                    dashboardScheduleAdapter.setSchedules(schedules)
+                    binding.lytEmptyUpcomingSchedule.visible()
+                }
+            })
+    }
+
     override fun onResume() {
         super.onResume()
-
         getUpcomingSchedule()
     }
 }
