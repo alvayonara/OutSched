@@ -1,16 +1,13 @@
 package com.alvayonara.outsched.ui.settings
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.core.utils.ToolbarConfig
 import com.alvayonara.outsched.databinding.ActivitySettingsBinding
 import com.alvayonara.outsched.ui.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_exercise_location.toolbar
-import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.activity_exercise_location.*
 
 class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 

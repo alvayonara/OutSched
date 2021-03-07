@@ -1,16 +1,14 @@
 package com.alvayonara.outsched.ui.splashscreen
 
 import android.content.Intent
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
-import androidx.appcompat.app.AppCompatActivity
 import com.alvayonara.outsched.R
-import com.alvayonara.outsched.ui.onboarding.OnBoardingActivity
 import com.alvayonara.outsched.core.utils.ToolbarConfig
 import com.alvayonara.outsched.databinding.ActivitySplashScreenBinding
 import com.alvayonara.outsched.ui.base.BaseActivity
+import com.alvayonara.outsched.ui.onboarding.OnBoardingActivity
 
 class SplashScreenActivity : BaseActivity<ActivitySplashScreenBinding>() {
 

@@ -1,7 +1,6 @@
 package com.alvayonara.outsched.ui.base
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -9,11 +8,6 @@ import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.WhichButton
-import com.afollestad.materialdialogs.actions.getActionButton
-import com.afollestad.materialdialogs.callbacks.onShow
-import com.alvayonara.outsched.MyApplication
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.core.utils.Helper.showMaterialDialog
 import com.karumi.dexter.Dexter

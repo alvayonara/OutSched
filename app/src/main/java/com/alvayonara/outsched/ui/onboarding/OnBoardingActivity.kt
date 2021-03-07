@@ -2,17 +2,14 @@ package com.alvayonara.outsched.ui.onboarding
 
 import android.content.Intent
 import android.graphics.PorterDuff
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.alvayonara.outsched.R
 import com.alvayonara.outsched.core.ui.OnBoardingPagerAdapter
-import com.alvayonara.outsched.ui.dashboard.DashboardActivity
 import com.alvayonara.outsched.core.utils.Preferences
 import com.alvayonara.outsched.core.utils.Preferences.Companion.ON_BOARDING
 import com.alvayonara.outsched.core.utils.ToolbarConfig
@@ -20,7 +17,7 @@ import com.alvayonara.outsched.core.utils.gone
 import com.alvayonara.outsched.core.utils.visible
 import com.alvayonara.outsched.databinding.ActivityOnBoardingBinding
 import com.alvayonara.outsched.ui.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_on_boarding.*
+import com.alvayonara.outsched.ui.dashboard.DashboardActivity
 
 class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>() {
 

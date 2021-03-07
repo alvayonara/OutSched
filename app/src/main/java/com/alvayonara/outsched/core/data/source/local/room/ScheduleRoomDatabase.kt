@@ -6,11 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.alvayonara.outsched.core.data.source.local.entity.ScheduleEntity
 
-@Database(entities = [ScheduleEntity::class], version = 1)
+@Database(entities = [ScheduleEntity::class], version = 2, exportSchema = false)
 abstract class ScheduleRoomDatabase : RoomDatabase() {
 
     abstract fun scheduleDao(): ScheduleDao
 
+    // Used for instance Room in Receiver.
     companion object {
         @Volatile
         private var INSTANCE: ScheduleRoomDatabase? = null

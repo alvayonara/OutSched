@@ -24,8 +24,7 @@ import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTR
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_LATITUDE
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_LONGITUDE
 import com.alvayonara.outsched.ui.schedule.SelectScheduleActivity.Companion.EXTRA_REQUEST_CODE
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -106,6 +105,7 @@ class ExerciseLocationActivity : BaseActivity<ActivityExerciseLocationBinding>()
         mMap.isMyLocationEnabled = true
         initViewMyLocation()
 
+        fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 if (location != null) {

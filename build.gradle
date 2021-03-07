@@ -35,7 +35,8 @@ ext {
     junitVersion = '4.13.2'
     junitTestVersion = '1.1.2'
     espressoVersion = '3.3.0'
-    googleServiceLocationVersion = '17.0.0'
+    googleServiceMapsVersion = '17.0.0'
+    googleServiceLocationVersion = '18.0.0'
     glideVersion = '4.11.0'
     retrofitVersion = '2.9.0'
     loggingInterceptorVersion = '4.9.0'
@@ -51,4 +52,5 @@ ext {
     rxandroidVersion = '2.1.1'
     rxbindingVersion = '2.0.0'
     lifecycleVersion = '2.3.0'
+    lottieVersion = '3.4.1'
 }

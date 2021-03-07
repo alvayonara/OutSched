@@ -1,11 +1,10 @@
 package com.alvayonara.outsched.core.data.source.remote
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.alvayonara.outsched.BuildConfig
-import com.alvayonara.outsched.core.domain.model.item.ScheduleListItem
 import com.alvayonara.outsched.core.data.source.remote.network.ApiResponse
 import com.alvayonara.outsched.core.data.source.remote.network.ApiService
+import com.alvayonara.outsched.core.domain.model.item.ScheduleListItem
 import com.alvayonara.outsched.core.utils.DataMapper
 import com.alvayonara.outsched.core.utils.GroupScheduleUtils.consolidateSchedule
 import com.alvayonara.outsched.core.utils.GroupScheduleUtils.initSchedule
