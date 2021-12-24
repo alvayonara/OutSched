@@ -5,6 +5,7 @@
 Before you continue
 ------
 * The App is still under development so this may contain some errors.<br>
+* <b>Update</b>: Support for the Dark Sky API service for existing customers will continue until the end of 2022.
 * If you encounter any problems or feedback, don't hesitate to contact me.
 
 Description
