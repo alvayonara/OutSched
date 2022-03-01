@@ -11,7 +11,6 @@ Before you continue
 Description
 ---------
 * OutSched is outdoor schedules app built with android architecture components and the repository pattern (LiveData, ViewModel, Room).<br>
-* DarkSky API is used to fetch forecast data based on location selected.
 
 ## License
 
